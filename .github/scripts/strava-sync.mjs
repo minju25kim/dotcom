@@ -59,6 +59,10 @@ const activitiesRes = await fetch(
   { headers: stravaHeaders }
 )
 const activities = await activitiesRes.json()
+if (!Array.isArray(activities)) {
+  console.error('Failed to fetch activities:', activities)
+  process.exit(1)
+}
 console.log(`✓ ${activities.length} activities fetched`)
 
 const activityRows = activities.map((a) => ({
