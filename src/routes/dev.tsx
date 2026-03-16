@@ -17,6 +17,7 @@ async function fetchPosts(): Promise<DevPostSummary[]> {
   const { data, error } = await supabase
     .from('dev')
     .select('id, title, slug, created_at')
+    .eq('published', true)
     .order('created_at', { ascending: false })
 
   if (error) throw error
