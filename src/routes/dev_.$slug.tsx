@@ -1,11 +1,11 @@
 import { createFileRoute, notFound } from '@tanstack/react-router'
 import { supabase } from '../lib/supabase'
-import type { BlogPost } from './blog'
+import type { DevPost } from './dev'
 
-async function fetchPost(slug: string): Promise<BlogPost> {
+async function fetchPost(slug: string): Promise<DevPost> {
   const { data, error } = await supabase
-    .from('blog')
-    .select('id, title, slug, content, created_at, updated_at')
+    .from('dev')
+    .select('id, title, slug, markdown, created_at, updated_at')
     .eq('slug', slug)
     .single()
 
@@ -13,14 +13,14 @@ async function fetchPost(slug: string): Promise<BlogPost> {
   return data
 }
 
-export const Route = createFileRoute('/blog_/$slug')({
+export const Route = createFileRoute('/dev_/$slug')({
   loader: ({ params }) => fetchPost(params.slug),
   staleTime: 60_000,
-  component: BlogPostPage,
+  component: DevPostPage,
   notFoundComponent: () => <p>Post not found.</p>,
 })
 
-function BlogPostPage() {
+function DevPostPage() {
   const post = Route.useLoaderData()
 
   return (
@@ -31,7 +31,7 @@ function BlogPostPage() {
           {new Date(post.created_at).toLocaleDateString()}
         </p>
       )}
-      <div style={{ marginTop: '1rem', whiteSpace: 'pre-wrap' }}>{post.content}</div>
+      <div style={{ marginTop: '1rem', whiteSpace: 'pre-wrap' }}>{post.markdown}</div>
     </main>
   )
 }
