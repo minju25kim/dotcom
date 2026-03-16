@@ -9,7 +9,6 @@ const routes = [
   { to: '/gears', label: 'Gears', description: 'The tools and gear I use day to day.' },
   { to: '/strava', label: 'Strava', description: 'My running and cycling activities.' },
   { to: '/dev', label: 'Dev', description: 'Development notes, tips, and snippets.' },
-  { to: '/blog', label: 'Blog', description: 'Thoughts and writings.' },
 ] as const
 
 function HomePage() {

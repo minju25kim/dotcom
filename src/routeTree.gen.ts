@@ -13,9 +13,8 @@ import { Route as StravaRouteImport } from './routes/strava'
 import { Route as ProjectsRouteImport } from './routes/projects'
 import { Route as GearsRouteImport } from './routes/gears'
 import { Route as DevRouteImport } from './routes/dev'
-import { Route as BlogRouteImport } from './routes/blog'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as BlogSlugRouteImport } from './routes/blog_.$slug'
+import { Route as DevSlugRouteImport } from './routes/dev_.$slug'
 
 const StravaRoute = StravaRouteImport.update({
   id: '/strava',
@@ -37,88 +36,64 @@ const DevRoute = DevRouteImport.update({
   path: '/dev',
   getParentRoute: () => rootRouteImport,
 } as any)
-const BlogRoute = BlogRouteImport.update({
-  id: '/blog',
-  path: '/blog',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const BlogSlugRoute = BlogSlugRouteImport.update({
-  id: '/blog_/$slug',
-  path: '/blog/$slug',
+const DevSlugRoute = DevSlugRouteImport.update({
+  id: '/dev_/$slug',
+  path: '/dev/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/blog': typeof BlogRoute
   '/dev': typeof DevRoute
   '/gears': typeof GearsRoute
   '/projects': typeof ProjectsRoute
   '/strava': typeof StravaRoute
-  '/blog/$slug': typeof BlogSlugRoute
+  '/dev/$slug': typeof DevSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/blog': typeof BlogRoute
   '/dev': typeof DevRoute
   '/gears': typeof GearsRoute
   '/projects': typeof ProjectsRoute
   '/strava': typeof StravaRoute
-  '/blog/$slug': typeof BlogSlugRoute
+  '/dev/$slug': typeof DevSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/blog': typeof BlogRoute
   '/dev': typeof DevRoute
   '/gears': typeof GearsRoute
   '/projects': typeof ProjectsRoute
   '/strava': typeof StravaRoute
-  '/blog_/$slug': typeof BlogSlugRoute
+  '/dev_/$slug': typeof DevSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths:
-    | '/'
-    | '/blog'
-    | '/dev'
-    | '/gears'
-    | '/projects'
-    | '/strava'
-    | '/blog/$slug'
+  fullPaths: '/' | '/dev' | '/gears' | '/projects' | '/strava' | '/dev/$slug'
   fileRoutesByTo: FileRoutesByTo
-  to:
-    | '/'
-    | '/blog'
-    | '/dev'
-    | '/gears'
-    | '/projects'
-    | '/strava'
-    | '/blog/$slug'
+  to: '/' | '/dev' | '/gears' | '/projects' | '/strava' | '/dev/$slug'
   id:
     | '__root__'
     | '/'
-    | '/blog'
     | '/dev'
     | '/gears'
     | '/projects'
     | '/strava'
-    | '/blog_/$slug'
+    | '/dev_/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  BlogRoute: typeof BlogRoute
   DevRoute: typeof DevRoute
   GearsRoute: typeof GearsRoute
   ProjectsRoute: typeof ProjectsRoute
   StravaRoute: typeof StravaRoute
-  BlogSlugRoute: typeof BlogSlugRoute
+  DevSlugRoute: typeof DevSlugRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -151,13 +126,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DevRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/blog': {
-      id: '/blog'
-      path: '/blog'
-      fullPath: '/blog'
-      preLoaderRoute: typeof BlogRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/': {
       id: '/'
       path: '/'
@@ -165,11 +133,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/blog_/$slug': {
-      id: '/blog_/$slug'
-      path: '/blog/$slug'
-      fullPath: '/blog/$slug'
-      preLoaderRoute: typeof BlogSlugRouteImport
+    '/dev_/$slug': {
+      id: '/dev_/$slug'
+      path: '/dev/$slug'
+      fullPath: '/dev/$slug'
+      preLoaderRoute: typeof DevSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -177,12 +145,11 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  BlogRoute: BlogRoute,
   DevRoute: DevRoute,
   GearsRoute: GearsRoute,
   ProjectsRoute: ProjectsRoute,
   StravaRoute: StravaRoute,
-  BlogSlugRoute: BlogSlugRoute,
+  DevSlugRoute: DevSlugRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

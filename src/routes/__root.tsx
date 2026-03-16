@@ -19,9 +19,6 @@ export const Route = createRootRoute({
         <Link to="/dev" activeProps={{ style: { fontWeight: 'bold' } }}>
           Dev
         </Link>
-        <Link to="/blog" activeProps={{ style: { fontWeight: 'bold' } }}>
-          Blog
-        </Link>
       </nav>
       <hr />
       <Outlet />
