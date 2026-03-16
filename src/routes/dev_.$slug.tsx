@@ -1,5 +1,6 @@
 import { createFileRoute, notFound } from '@tanstack/react-router'
 import { supabase } from '../lib/supabase'
+import { MarkdownRenderer } from '../components/MarkdownRenderer'
 import type { DevPost } from './dev'
 
 async function fetchPost(slug: string): Promise<DevPost> {
@@ -31,7 +32,7 @@ function DevPostPage() {
           {new Date(post.created_at).toLocaleDateString()}
         </p>
       )}
-      <div style={{ marginTop: '1rem', whiteSpace: 'pre-wrap' }}>{post.markdown}</div>
+      <MarkdownRenderer content={post.markdown ?? ''} />
     </main>
   )
 }
