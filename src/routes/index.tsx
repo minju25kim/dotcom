@@ -13,10 +13,8 @@ const routes = [
 
 const socials = [
   { label: 'GitHub', url: 'https://github.com/minju25kim' },
-  { label: 'LinkedIn', url: 'https://linkedin.com/in/minju25kim' },
   { label: 'Instagram', url: 'https://instagram.com/minju25kim' },
   { label: 'YouTube', url: 'https://youtube.com/@minju25kim' },
-  { label: 'Medium', url: 'https://medium.com/@minju25kim' },
   { label: 'Strava', url: 'https://strava.com/athletes/minju25kim' },
 ]
 
