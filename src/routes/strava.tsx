@@ -60,52 +60,127 @@ function formatTime(seconds: number) {
   return h > 0 ? `${h}h ${m}m` : `${m}m`
 }
 
+const SPORT_EMOJI: Record<string, { emoji: string; label: string }> = {
+  Run:         { emoji: '🏃', label: 'Run' },
+  VirtualRun:  { emoji: '🏃', label: 'Virtual Run' },
+  Ride:        { emoji: '🚴', label: 'Ride' },
+  VirtualRide: { emoji: '🚴', label: 'Virtual Ride' },
+  Walk:        { emoji: '🚶', label: 'Walk' },
+  Hike:        { emoji: '🥾', label: 'Hike' },
+}
+
+function SportBadge({ type }: { type: string }) {
+  const config = SPORT_EMOJI[type] ?? { emoji: '⚡', label: type }
+  return (
+    <span style={{
+      display: 'inline-flex',
+      alignItems: 'center',
+      gap: '0.3rem',
+      padding: '3px 10px 3px 6px',
+      borderRadius: '100px',
+      fontSize: '0.72rem',
+      fontWeight: 700,
+      fontFamily: 'var(--mono)',
+      letterSpacing: '0.04em',
+      background: 'var(--code-bg)',
+      color: 'var(--text)',
+      border: '1px solid var(--border)',
+      flexShrink: 0,
+    }}>
+      <span style={{ fontSize: '0.9rem' }}>{config.emoji}</span>
+      {config.label}
+    </span>
+  )
+}
+
 function StravaPage() {
   const { stats, activities } = Route.useLoaderData()
   const year = new Date().getFullYear()
 
   return (
-    <main style={{ padding: '1rem', maxWidth: '600px' }}>
-      <h1>Strava</h1>
+    <main>
+      <header className="page-header">
+        <h1 style={{ margin: 0 }}>Strava</h1>
+      </header>
 
-      <h2>{year} Totals</h2>
-      {!stats ? (
-        <p>No data yet.</p>
-      ) : (
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '2rem' }}>
-          <div>
-            <h3>🏃 Running</h3>
-            <div>{formatDistance(stats.run_distance)}</div>
-            <div>{formatTime(stats.run_time)}</div>
-            <div>{stats.run_count} runs</div>
-          </div>
-          <div>
-            <h3>🚴 Cycling</h3>
-            <div>{formatDistance(stats.ride_distance)}</div>
-            <div>{formatTime(stats.ride_time)}</div>
-            <div>{stats.ride_count} rides</div>
-          </div>
-        </div>
-      )}
+      <section style={{ padding: '3rem 2rem', borderBottom: '1px solid var(--border)' }}>
+        <p style={{
+          fontFamily: 'var(--mono)',
+          fontSize: '0.65rem',
+          fontWeight: 700,
+          textTransform: 'uppercase',
+          letterSpacing: '0.1em',
+          color: 'var(--text)',
+          opacity: 0.5,
+          marginBottom: '1.5rem',
+        }}>
+          {year} Totals
+        </p>
 
-      <h2>Recent Activities</h2>
-      {activities.length === 0 ? (
-        <p>No activities yet.</p>
-      ) : (
-        <ul style={{ listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-          {activities.map((a) => (
-            <li key={a.id} style={{ borderBottom: '1px solid #eee', paddingBottom: '0.75rem' }}>
-              <strong>{a.name}</strong>
-              <div style={{ fontSize: '0.85rem', color: '#888' }}>
-                {a.sport_type} · {formatDistance(a.distance)} · {formatTime(a.moving_time)} · ↑{a.elevation_gain.toFixed(0)}m
-              </div>
-              <div style={{ fontSize: '0.8rem', color: '#aaa' }}>
-                {new Date(a.start_date).toLocaleDateString()}
-              </div>
-            </li>
-          ))}
-        </ul>
-      )}
+        {!stats ? (
+          <p style={{ color: 'var(--text)' }}>No data yet.</p>
+        ) : (
+          <div className="stat-grid">
+            <div className="stat-card">
+              <div className="stat-card__label">🏃 Running</div>
+              <div className="stat-card__value">{formatDistance(stats.run_distance)}</div>
+              <div className="stat-card__meta">{formatTime(stats.run_time)} · {stats.run_count} runs</div>
+            </div>
+            <div className="stat-card">
+              <div className="stat-card__label">🚴 Cycling</div>
+              <div className="stat-card__value">{formatDistance(stats.ride_distance)}</div>
+              <div className="stat-card__meta">{formatTime(stats.ride_time)} · {stats.ride_count} rides</div>
+            </div>
+          </div>
+        )}
+      </section>
+
+      <section style={{ padding: '3rem 2rem' }}>
+        <p style={{
+          fontFamily: 'var(--mono)',
+          fontSize: '0.65rem',
+          fontWeight: 700,
+          textTransform: 'uppercase',
+          letterSpacing: '0.1em',
+          color: 'var(--text)',
+          opacity: 0.5,
+          marginBottom: '1.5rem',
+        }}>
+          Recent Activities
+        </p>
+
+        {activities.length === 0 ? (
+          <p style={{ color: 'var(--text)' }}>No activities yet.</p>
+        ) : (
+          <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+            {activities.map((a) => (
+              <li key={a.id} style={{
+                display: 'grid',
+                gridTemplateColumns: '1fr auto',
+                alignItems: 'start',
+                gap: '1rem',
+                padding: '1rem 0',
+                borderBottom: '1px solid var(--border)',
+              }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                  <div style={{ fontWeight: 500, color: 'var(--text-h)' }}>
+                    {a.name}
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
+                    <SportBadge type={a.sport_type} />
+                    <span style={{ fontFamily: 'var(--mono)', fontSize: '0.75rem', color: 'var(--text)' }}>
+                      {formatDistance(a.distance)} · {formatTime(a.moving_time)} · ↑{a.elevation_gain.toFixed(0)}m
+                    </span>
+                  </div>
+                </div>
+                <div style={{ fontFamily: 'var(--mono)', fontSize: '0.75rem', color: 'var(--text)', opacity: 0.5, whiteSpace: 'nowrap' }}>
+                  {new Date(a.start_date).toLocaleDateString()}
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
     </main>
   )
 }

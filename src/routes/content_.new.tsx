@@ -2,7 +2,7 @@ import { createFileRoute, redirect, useNavigate } from '@tanstack/react-router'
 import { supabase } from '../lib/supabase'
 import { EditorForm } from '../components/EditorForm'
 
-export const Route = createFileRoute('/dev_/new')({
+export const Route = createFileRoute('/content_/new')({
   beforeLoad: ({ context }) => {
     if (!context.session) throw redirect({ to: '/admin' })
   },
@@ -18,7 +18,8 @@ function NewPostPage() {
     published: boolean
     markdown: string
   }) => {
-    const { error } = await supabase.from('dev').insert({
+    const { error } = await supabase.from('content').insert({
+      type: 'dev',
       title,
       slug,
       published,
@@ -27,7 +28,7 @@ function NewPostPage() {
     })
 
     if (error) throw new Error(error.message)
-    navigate({ to: '/dev' })
+    navigate({ to: '/content' })
   }
 
   return (

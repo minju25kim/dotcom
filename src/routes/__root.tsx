@@ -8,24 +8,25 @@ export interface RouterContext {
 function RootLayout() {
   return (
     <>
-      <nav style={{ display: 'flex', gap: '1rem', padding: '1rem', alignItems: 'center' }}>
-        <Link to="/" activeProps={{ style: { fontWeight: 'bold' } }}>
-          Home
+      <nav className="site-nav">
+        <Link to="/" className="site-nav__brand">
+          minju25kim
         </Link>
-        <Link to="/projects" activeProps={{ style: { fontWeight: 'bold' } }}>
-          Projects
-        </Link>
-        <Link to="/gears" activeProps={{ style: { fontWeight: 'bold' } }}>
-          Gears
-        </Link>
-        <Link to="/strava" activeProps={{ style: { fontWeight: 'bold' } }}>
-          Strava
-        </Link>
-        <Link to="/dev" activeProps={{ style: { fontWeight: 'bold' } }}>
-          Dev
-        </Link>
+        <div className="site-nav__links">
+          <Link to="/projects" activeProps={{ style: { color: 'var(--accent)' } }}>
+            Projects
+          </Link>
+          <Link to="/gears" activeProps={{ style: { color: 'var(--accent)' } }}>
+            Gears
+          </Link>
+          <Link to="/strava" activeProps={{ style: { color: 'var(--accent)' } }}>
+            Strava
+          </Link>
+          <Link to="/content" activeProps={{ style: { color: 'var(--accent)' } }}>
+            Content
+          </Link>
+        </div>
       </nav>
-      <hr />
       <Outlet />
     </>
   )
