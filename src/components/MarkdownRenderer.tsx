@@ -14,5 +14,9 @@ export function MarkdownRenderer({ content }: { content: string }) {
     },
   })
 
-  return <EditorContent editor={editor} />
+  return (
+    <div className="prose">
+      <EditorContent editor={editor} />
+    </div>
+  )
 }

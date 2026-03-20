@@ -12,8 +12,9 @@ function Toolbar({ editor }: { editor: Editor }) {
       style={{
         padding: '0.25rem 0.5rem',
         fontWeight: active ? 'bold' : 'normal',
-        background: active ? '#ddd' : 'transparent',
-        border: '1px solid #ccc',
+        background: active ? 'var(--accent-bg)' : 'transparent',
+        color: active ? 'var(--accent)' : 'var(--text)',
+        border: '1px solid var(--border)',
         borderRadius: '3px',
         cursor: 'pointer',
       }}
@@ -23,20 +24,20 @@ function Toolbar({ editor }: { editor: Editor }) {
   )
 
   return (
-    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.25rem', padding: '0.5rem', border: '1px solid #ccc', borderBottom: 'none' }}>
+    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.25rem', padding: '0.5rem', border: '1px solid var(--border)', borderBottom: 'none', borderRadius: '6px 6px 0 0', background: 'var(--code-bg)' }}>
       {btn('B', () => editor.chain().focus().toggleBold().run(), editor.isActive('bold'))}
       {btn('I', () => editor.chain().focus().toggleItalic().run(), editor.isActive('italic'))}
       {btn('S', () => editor.chain().focus().toggleStrike().run(), editor.isActive('strike'))}
       {btn('Code', () => editor.chain().focus().toggleCode().run(), editor.isActive('code'))}
-      <span style={{ width: '1px', background: '#ccc', margin: '0 0.25rem' }} />
+      <span style={{ width: '1px', background: 'var(--border)', margin: '0 0.25rem' }} />
       {btn('H1', () => editor.chain().focus().toggleHeading({ level: 1 }).run(), editor.isActive('heading', { level: 1 }))}
       {btn('H2', () => editor.chain().focus().toggleHeading({ level: 2 }).run(), editor.isActive('heading', { level: 2 }))}
       {btn('H3', () => editor.chain().focus().toggleHeading({ level: 3 }).run(), editor.isActive('heading', { level: 3 }))}
-      <span style={{ width: '1px', background: '#ccc', margin: '0 0.25rem' }} />
+      <span style={{ width: '1px', background: 'var(--border)', margin: '0 0.25rem' }} />
       {btn('• List', () => editor.chain().focus().toggleBulletList().run(), editor.isActive('bulletList'))}
       {btn('1. List', () => editor.chain().focus().toggleOrderedList().run(), editor.isActive('orderedList'))}
       {btn('Quote', () => editor.chain().focus().toggleBlockquote().run(), editor.isActive('blockquote'))}
-      <span style={{ width: '1px', background: '#ccc', margin: '0 0.25rem' }} />
+      <span style={{ width: '1px', background: 'var(--border)', margin: '0 0.25rem' }} />
       {btn('Left', () => editor.chain().focus().setTextAlign('left').run(), editor.isActive({ textAlign: 'left' }))}
       {btn('Center', () => editor.chain().focus().setTextAlign('center').run(), editor.isActive({ textAlign: 'center' }))}
       {btn('Right', () => editor.chain().focus().setTextAlign('right').run(), editor.isActive({ textAlign: 'right' }))}
@@ -137,12 +138,12 @@ export function EditorForm({ initialValues = {}, onSubmit, submitLabel = 'Save' 
           {editor && <Toolbar editor={editor} />}
           <EditorContent
             editor={editor}
-            style={{ border: '1px solid #ccc', minHeight: '300px', padding: '0.5rem' }}
+            style={{ border: '1px solid var(--border)', borderRadius: '0 0 6px 6px', minHeight: '300px', padding: '0.75rem', background: 'var(--bg)' }}
           />
         </div>
       </div>
 
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {error && <p style={{ color: 'var(--accent)' }}>{error}</p>}
 
       <button type="submit" disabled={submitting}>
         {submitting ? 'Saving...' : submitLabel}

@@ -1,6 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useRef, useEffect, useState } from 'react'
 import { supabase } from '../lib/supabase'
+import { useIsMobile } from '../hooks/useIsMobile'
 
 interface GearRow {
   id: number
@@ -40,12 +41,6 @@ export const Route = createFileRoute('/gears')({
   component: GearsPage,
 })
 
-const CATEGORY_COLORS: Record<string, string> = {
-  'Road Bike': '#aa3bff',
-  Helmet: '#3b82f6',
-  'Bike Computer': '#10b981',
-  Pedals: '#f59e0b',
-}
 
 function useInView(threshold = 0.2) {
   const ref = useRef<HTMLElement>(null)
@@ -69,20 +64,19 @@ function useInView(threshold = 0.2) {
 
 function GearSection({ gear, index }: { gear: GearRow; index: number }) {
   const { ref, inView } = useInView()
+  const isMobile = useIsMobile()
   const isEven = index % 2 === 0
-  const accentColor = CATEGORY_COLORS[gear.category] ?? '#aa3bff'
   const imageUrl = resolveImageUrl(gear.image_url)
-  const specs = gear.specs as Record<string, string>
 
   return (
     <section
       ref={ref}
       style={{
         display: 'flex',
-        flexDirection: isEven ? 'row' : 'row-reverse',
-        alignItems: 'center',
-        minHeight: '100vh',
-        padding: '2rem',
+        flexDirection: isMobile ? 'column' : (isEven ? 'row' : 'row-reverse'),
+        alignItems: isMobile ? 'stretch' : 'center',
+        minHeight: isMobile ? 'auto' : '100vh',
+        padding: isMobile ? '2rem 1.25rem' : '2rem',
         gap: '2rem',
         borderBottom: '1px solid var(--border)',
         opacity: inView ? 1 : 0,
@@ -93,7 +87,13 @@ function GearSection({ gear, index }: { gear: GearRow; index: number }) {
       }}
     >
       {/* Image */}
-      <div style={{ flex: '0 0 55%', display: 'flex', alignItems: 'center', justifyContent: 'center', height: '500px' }}>
+      <div style={{
+        flex: isMobile ? 'none' : '0 0 55%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: isMobile ? '260px' : '500px',
+      }}>
         {imageUrl && (
           <img
             src={imageUrl}
@@ -104,7 +104,7 @@ function GearSection({ gear, index }: { gear: GearRow; index: number }) {
       </div>
 
       {/* Info panel */}
-      <div style={{ flex: 1, textAlign: 'left', padding: '1rem' }}>
+      <div style={{ flex: 1, textAlign: 'left', padding: isMobile ? '0' : '1rem' }}>
         <span
           style={{
             display: 'inline-block',
@@ -114,9 +114,9 @@ function GearSection({ gear, index }: { gear: GearRow; index: number }) {
             fontWeight: 700,
             letterSpacing: '0.1em',
             textTransform: 'uppercase',
-            background: `${accentColor}20`,
-            color: accentColor,
-            border: `1px solid ${accentColor}50`,
+            background: 'var(--code-bg)',
+            color: 'var(--text)',
+            border: '1px solid var(--border)',
             marginBottom: '1.25rem',
           }}
         >
@@ -127,51 +127,17 @@ function GearSection({ gear, index }: { gear: GearRow; index: number }) {
           style={{
             margin: '0 0 4px',
             color: 'var(--text-h)',
-            fontSize: '2rem',
+            fontSize: isMobile ? '1.5rem' : '2rem',
             letterSpacing: '-0.5px',
             lineHeight: 1.1,
           }}
         >
           {gear.name}
         </h2>
-        <p style={{ color: accentColor, fontWeight: 600, margin: '0 0 1rem', fontSize: '0.9rem' }}>
+        <p style={{ color: 'var(--text)', fontWeight: 600, margin: '0 0 1rem', fontSize: '0.9rem' }}>
           {gear.brand}
           {gear.model_year ? ` · ${gear.model_year}` : ''}
         </p>
-        <p style={{ color: 'var(--text)', lineHeight: 1.7, margin: '0 0 2rem' }}>
-          {gear.description}
-        </p>
-
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.75rem' }}>
-          {Object.entries(specs)
-            .filter(([, v]) => typeof v === 'string' || typeof v === 'number')
-            .map(([key, value]) => (
-              <div
-                key={key}
-                style={{
-                  padding: '0.875rem 1rem',
-                  borderRadius: '10px',
-                  background: 'var(--code-bg)',
-                  border: '1px solid var(--border)',
-                }}
-              >
-                <div
-                  style={{
-                    fontSize: '0.65rem',
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.1em',
-                    color: 'var(--text)',
-                    marginBottom: '4px',
-                  }}
-                >
-                  {key.replace(/_/g, ' ')}
-                </div>
-                <div style={{ fontWeight: 600, color: 'var(--text-h)', fontSize: '0.9rem' }}>
-                  {String(value)}
-                </div>
-              </div>
-            ))}
-        </div>
       </div>
     </section>
   )
@@ -182,15 +148,9 @@ function GearsPage() {
 
   return (
     <main>
-      <div
-        style={{
-          padding: '5rem 2rem 3rem',
-          borderBottom: '1px solid var(--border)',
-          textAlign: 'left',
-        }}
-      >
+      <header className="page-header">
         <h1 style={{ margin: 0 }}>Gears</h1>
-      </div>
+      </header>
 
       {gears.map((gear, index) => (
         <GearSection key={gear.id} gear={gear} index={index} />
