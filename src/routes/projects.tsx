@@ -1,202 +1,147 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { useRef, useEffect, useState } from 'react'
-import { useIsMobile } from '../hooks/useIsMobile'
-
-interface Project {
-  number: string
-  name: string
-  tagline: string
-  story: string
-  tags: string[]
-  url?: string
-  year: number
-}
-
-const PROJECTS: Project[] = []
-
-function useInView(threshold = 0.2) {
-  const ref = useRef<HTMLElement>(null)
-  const [inView, setInView] = useState(false)
-
-  useEffect(() => {
-    const el = ref.current
-    if (!el) return
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) setInView(true)
-      },
-      { threshold },
-    )
-    observer.observe(el)
-    return () => observer.disconnect()
-  }, [threshold])
-
-  return { ref, inView }
-}
-
-function ProjectSection({ project, index }: { project: Project; index: number }) {
-  const { ref, inView } = useInView()
-  const isMobile = useIsMobile()
-  const isEven = index % 2 === 0
-
-  return (
-    <section
-      ref={ref}
-      style={{
-        display: 'grid',
-        gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
-        minHeight: isMobile ? 'auto' : '100vh',
-        borderBottom: '1px solid var(--border)',
-        opacity: inView ? 1 : 0,
-        transform: inView ? 'none' : 'translateY(50px)',
-        transition: 'opacity 0.9s ease, transform 0.9s ease',
-      }}
-    >
-      {/* Number + Name side */}
-      <div
-        style={{
-          padding: isMobile ? '2.5rem 1.25rem' : '4rem 3rem',
-          borderRight: isMobile ? 'none' : '1px solid var(--border)',
-          borderBottom: isMobile ? '1px solid var(--border)' : 'none',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          order: isMobile ? 0 : (isEven ? 0 : 1),
-        }}
-      >
-        <span
-          style={{
-            fontFamily: 'var(--mono)',
-            fontSize: '0.75rem',
-            color: 'var(--text)',
-            opacity: 0.5,
-            letterSpacing: '0.1em',
-            marginBottom: '1.5rem',
-          }}
-        >
-          {project.number} — {project.year}
-        </span>
-
-        <h2
-          style={{
-            fontSize: isMobile ? 'clamp(2rem, 8vw, 2.5rem)' : 'clamp(2.5rem, 5vw, 4rem)',
-            fontWeight: 500,
-            color: 'var(--text-h)',
-            letterSpacing: '-1.5px',
-            lineHeight: 1,
-            margin: '0 0 1rem',
-          }}
-        >
-          {project.name}
-        </h2>
-
-        <p
-          style={{
-            color: 'var(--accent)',
-            fontSize: '1rem',
-            fontWeight: 500,
-            margin: '0 0 2.5rem',
-            lineHeight: 1.5,
-          }}
-        >
-          {project.tagline}
-        </p>
-
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
-          {project.tags.map((tag) => (
-            <span
-              key={tag}
-              style={{
-                padding: '3px 10px',
-                borderRadius: '4px',
-                fontSize: '0.7rem',
-                fontFamily: 'var(--mono)',
-                background: 'var(--code-bg)',
-                border: '1px solid var(--border)',
-                color: 'var(--text)',
-              }}
-            >
-              {tag}
-            </span>
-          ))}
-        </div>
-      </div>
-
-      {/* Story side */}
-      <div
-        style={{
-          padding: isMobile ? '2.5rem 1.25rem' : '4rem 3rem',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          order: isMobile ? 1 : (isEven ? 1 : 0),
-        }}
-      >
-        <p
-          style={{
-            color: 'var(--text)',
-            fontSize: '1.05rem',
-            lineHeight: 1.8,
-            margin: '0 0 2rem',
-          }}
-        >
-          {project.story}
-        </p>
-
-        {project.url && (
-          <a
-            href={project.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '6px',
-              fontSize: '0.85rem',
-              color: 'var(--accent)',
-              fontWeight: 600,
-              textDecoration: 'none',
-            }}
-          >
-            View project →
-          </a>
-        )}
-      </div>
-    </section>
-  )
-}
 
 export const Route = createFileRoute('/projects')({
   component: ProjectsPage,
 })
 
+const BR = {
+  bg:  'var(--br-bg)',
+  ink: 'var(--br-ink)',
+  hot: 'var(--br-hot)',
+  font: '"JetBrains Mono", ui-monospace, Menlo, monospace',
+}
+
+const PROJECTS = [
+  {
+    n: '01',
+    name: 'BIKELOG',
+    status: 'IN PROGRESS',
+    year: '2026',
+    desc: 'A smarter ride journal for cyclists. Pull your Strava rides, overlay them on Mapbox, add notes, remember every climb.',
+    stack: ['TYPESCRIPT', 'NEXT', 'MAPBOX', 'STRAVA API'],
+    why: 'Every ride tells a story. Strava forgets. bikelog remembers.',
+    bg: BR.hot,
+  },
+  {
+    n: '02',
+    name: 'CUTTER.AI',
+    status: 'PROTOTYPE',
+    year: '2026',
+    desc: 'Edit video at the speed of thought. Whisper transcribes; you rewrite the transcript; ffmpeg re-cuts the video.',
+    stack: ['PYTHON', 'WHISPER', 'FFMPEG'],
+    why: 'Text is the fastest editor UI ever invented. Apply it to video.',
+    bg: null,
+  },
+  {
+    n: '03',
+    name: 'MINJU25KIM.DEV',
+    status: 'LIVE',
+    year: '2025',
+    desc: 'This site. Static, fast, brutally honest. Hosted on Cloudflare Pages.',
+    stack: ['REACT', 'VITE', 'SUPABASE', 'CF PAGES'],
+    why: "A developer site should be a developer's resume.",
+    bg: null,
+  },
+]
+
 function ProjectsPage() {
   return (
-    <main>
-      <header className="page-header">
-        <h1 style={{ margin: 0 }}>Projects</h1>
-      </header>
-
-      {PROJECTS.length === 0 ? (
+    <main style={{
+      background: BR.bg,
+      color: BR.ink,
+      fontFamily: BR.font,
+      flex: 1,
+    }}>
+      {/* Page header */}
+      <div style={{ padding: '22px 28px 18px', borderBottom: `3px solid ${BR.ink}` }}>
+        <div style={{ fontSize: 11, letterSpacing: '0.2em' }}>━━ PROJECTS / A TO Z ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</div>
         <div style={{
-          padding: '5rem 2rem',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '1rem',
-          maxWidth: '480px',
+          fontSize: 'clamp(48px, 6vw, 96px)',
+          fontWeight: 900,
+          letterSpacing: '-0.05em',
+          lineHeight: 0.95,
+          textTransform: 'uppercase',
+          marginTop: 8,
         }}>
-          <p style={{ color: 'var(--text)', lineHeight: 1.8, margin: 0 }}>
-            Check back soon —{' '}
-            <a href="https://github.com/minju25kim" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent)' }}>
-              GitHub
-            </a>
-          </p>
+          THE WORK.
         </div>
-      ) : (
-        PROJECTS.map((project, index) => (
-          <ProjectSection key={project.number} project={project} index={index} />
-        ))
-      )}
+        <div style={{ marginTop: 10, fontSize: 13, maxWidth: 620 }}>
+          Three things I'm shipping or have shipped. Some finished. Some not. All honest.
+        </div>
+      </div>
+
+      {/* Projects table */}
+      {PROJECTS.map((p, i) => (
+        <div key={i} style={{
+          display: 'grid',
+          gridTemplateColumns: '80px 1.3fr 1fr 120px',
+          borderBottom: `3px solid ${BR.ink}`,
+          background: p.bg ?? 'transparent',
+          color: p.bg ? 'white' : BR.ink,
+        }} className="project-row">
+          <div style={{
+            padding: '24px 20px',
+            borderRight: `3px solid ${BR.ink}`,
+            fontSize: 48,
+            fontWeight: 900,
+            lineHeight: 1,
+          }}>
+            {p.n}
+          </div>
+          <div style={{ padding: '24px 20px', borderRight: `3px solid ${BR.ink}` }}>
+            <div style={{ fontSize: 42, fontWeight: 900, letterSpacing: '-0.04em', lineHeight: 0.95 }}>
+              {p.name}
+            </div>
+            <div style={{ fontSize: 13, marginTop: 10, lineHeight: 1.5, maxWidth: 460 }}>
+              {p.desc}
+            </div>
+            <div style={{ display: 'flex', gap: 6, marginTop: 12, flexWrap: 'wrap' }}>
+              {p.stack.map((s, j) => (
+                <span key={j} style={{
+                  border: `2px solid ${p.bg ? 'white' : BR.ink}`,
+                  padding: '3px 8px',
+                  fontSize: 10,
+                }}>
+                  {s}
+                </span>
+              ))}
+            </div>
+          </div>
+          <div style={{ padding: '24px 20px', borderRight: `3px solid ${BR.ink}` }}>
+            <div style={{ fontSize: 11, letterSpacing: '0.15em', marginBottom: 6 }}>WHY IT MATTERS</div>
+            <div style={{ fontSize: 12, lineHeight: 1.6 }}>{p.why}</div>
+          </div>
+          <div style={{ padding: '24px 16px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+            <div>
+              <div style={{ fontSize: 11, letterSpacing: '0.15em' }}>{p.year}</div>
+              <div style={{
+                fontSize: 11,
+                marginTop: 8,
+                background: p.bg ? 'white' : BR.ink,
+                color: p.bg ? BR.hot : BR.bg,
+                padding: '3px 8px',
+                textAlign: 'center',
+                fontWeight: 700,
+              }}>
+                {p.status}
+              </div>
+            </div>
+            <a style={{ fontSize: 13, fontWeight: 700, marginTop: 20 }}>→ OPEN</a>
+          </div>
+        </div>
+      ))}
+
+      <style>{`
+        @media (max-width: 768px) {
+          .project-row {
+            grid-template-columns: 1fr !important;
+          }
+          .project-row > div {
+            border-right: none !important;
+            border-bottom: 1px solid #0a0a0a;
+          }
+        }
+      `}</style>
     </main>
   )
 }

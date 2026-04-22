@@ -1,366 +1,130 @@
+@import "tailwindcss";
+
+@theme {
+  --color-accent: var(--br-hot);
+  --color-accent-subtle: rgba(255, 59, 0, 0.08);
+  --color-accent-border: rgba(255, 59, 0, 0.3);
+  --color-muted: #555;
+  --color-heading: var(--br-ink);
+  --color-surface: var(--br-bg);
+  --color-card: var(--br-soft);
+  --color-on-card: var(--br-ink);
+  --color-border: var(--br-ink);
+  --font-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  --font-sans: "JetBrains Mono", ui-monospace, Menlo, monospace;
+}
+
+/* ── Brutalist palette tokens ─────────────────────────────────── */
 :root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f3f4f6;
-  --accent: #004225;
-  --accent-bg: rgba(0, 66, 37, 0.08);
-  --accent-border: rgba(0, 66, 37, 0.3);
-  --social-bg: rgba(243, 244, 246, 0.5);
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
-
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
-
-  font: 18px/145% var(--sans);
-  letter-spacing: 0.18px;
-  color-scheme: light dark;
-  color: var(--text);
-  background: var(--bg);
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-
-  @media (max-width: 1024px) {
-    font-size: 16px;
-  }
+  --br-bg:   #f4f1ea;
+  --br-ink:  #0a0a0a;
+  --br-hot:  #ff3b00;
+  --br-soft: #e8e2d1;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #00a651;
-    --accent-bg: rgba(0, 166, 81, 0.12);
-    --accent-border: rgba(0, 166, 81, 0.35);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
-  }
-
-  #social .button-icon {
-    filter: invert(1) brightness(2);
-  }
+[data-theme="dark"] {
+  --br-bg:   #0b1e3d;
+  --br-ink:  #f4f1ea;
+  --br-hot:  #ff8c42;
+  --br-soft: #14284a;
 }
+
+@keyframes marq {
+  0%   { transform: translateX(0) }
+  100% { transform: translateX(-50%) }
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--br-bg);
+  font-family: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  color: var(--br-ink);
+}
+
+* { box-sizing: border-box; }
+
+a { color: inherit; text-decoration: none; cursor: pointer; }
 
 #root {
-  width: 1126px;
-  max-width: 100%;
-  margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
+  width: 100%;
   min-height: 100svh;
   display: flex;
   flex-direction: column;
-  box-sizing: border-box;
 }
 
-body {
-  margin: 0;
-}
-
-.site-nav {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 2rem;
-  height: 56px;
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--border);
-  box-sizing: border-box;
-}
-
-@media (prefers-color-scheme: dark) {
-  .site-nav {
-    background: rgba(22, 23, 29, 0.85);
-  }
-}
-
-.site-nav a {
-  color: var(--text);
-  text-decoration: none;
-  font-size: 0.875rem;
-  transition: color 0.15s ease;
-}
-
-.site-nav a:hover {
-  color: var(--text-h);
-}
-
-.site-nav__brand {
-  font-family: var(--mono);
-  font-size: 0.8rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  color: var(--text-h) !important;
-}
-
-.site-nav__links {
-  display: flex;
-  gap: 1.75rem;
-  align-items: center;
-}
-
-.content-type-badge {
-  font-family: var(--mono);
-  font-size: 0.65rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--text);
-  opacity: 0.5;
-  margin-right: 0.5rem;
-}
-
-/* Page section header — shared across all pages */
-.page-header {
-  padding: 5rem 2rem 3rem;
-  border-bottom: 1px solid var(--border);
-  text-align: left;
-}
-
-/* Route cards grid (Home) */
-.route-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1px;
-  background: var(--border);
-}
-
-/* Stat cards grid (Strava) */
-.stat-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1rem;
-}
-
-/* ─── Mobile ─────────────────────────────── */
-@media (max-width: 768px) {
-  .site-nav {
-    padding: 0 1rem;
-    height: 48px;
-  }
-
-  .site-nav__links {
-    gap: 1rem;
-  }
-
-  .site-nav a {
-    font-size: 0.8rem;
-  }
-
-  .page-header {
-    padding: 3rem 1.25rem 2rem;
-  }
-
-  .route-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .stat-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* Prose typography for markdown content */
-.prose .ProseMirror {
-  outline: none;
-  color: var(--text);
+/* Prose typography for markdown content pages */
+.prose {
+  color: var(--br-ink);
+  font-family: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  font-size: 14px;
   line-height: 1.8;
 }
 
-.prose .ProseMirror > * + * {
-  margin-top: 1.25em;
-}
-
-.prose .ProseMirror h1,
-.prose .ProseMirror h2,
-.prose .ProseMirror h3 {
-  color: var(--text-h);
-  font-weight: 500;
+.prose h1, .prose h2, .prose h3 {
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
   margin: 2em 0 0.5em;
-  line-height: 1.3;
+  color: var(--br-ink);
+  text-transform: uppercase;
 }
 
-.prose .ProseMirror h1 { font-size: 1.6rem; letter-spacing: -0.5px; }
-.prose .ProseMirror h2 { font-size: 1.25rem; }
-.prose .ProseMirror h3 { font-size: 1rem; }
+.prose h1 { font-size: 2rem; }
+.prose h2 { font-size: 1.4rem; }
+.prose h3 { font-size: 1.1rem; }
 
-.prose .ProseMirror p {
-  margin: 0;
-  color: var(--text);
-}
+.prose p { margin: 0 0 1em; color: var(--br-ink); }
 
-.prose .ProseMirror code {
-  font-family: var(--mono);
+.prose code {
+  font-family: "JetBrains Mono", ui-monospace, Menlo, monospace;
   font-size: 0.85em;
-  background: var(--code-bg);
-  border-radius: 4px;
+  background: var(--br-soft);
+  border: 1px solid var(--br-ink);
   padding: 2px 6px;
-  color: var(--text-h);
+  color: var(--br-ink);
 }
 
-.prose .ProseMirror pre {
-  background: var(--code-bg);
-  border: 1px solid var(--border);
-  border-radius: 8px;
+.prose pre {
+  background: var(--br-ink);
+  border: 3px solid var(--br-ink);
   padding: 1.25rem;
   overflow-x: auto;
+  margin: 1.5em 0;
 }
 
-.prose .ProseMirror pre code {
+.prose pre code {
   background: none;
+  border: none;
   padding: 0;
   font-size: 0.875rem;
   line-height: 1.6;
+  color: var(--br-bg);
 }
 
-.prose .ProseMirror blockquote {
-  border-left: 3px solid var(--accent);
+.prose blockquote {
+  border-left: 4px solid var(--br-hot);
   margin: 0;
   padding-left: 1.25rem;
-  color: var(--text);
+  color: var(--br-ink);
+  opacity: 0.75;
   font-style: italic;
 }
 
-.prose .ProseMirror ul,
-.prose .ProseMirror ol {
-  padding-left: 1.5rem;
-}
+.prose ul, .prose ol { padding-left: 1.5rem; color: var(--br-ink); }
+.prose li + li { margin-top: 0.35em; }
 
-.prose .ProseMirror li + li {
-  margin-top: 0.35em;
-}
-
-.prose .ProseMirror a {
-  color: var(--accent);
+.prose a {
+  color: var(--br-hot);
   text-decoration: underline;
   text-underline-offset: 3px;
 }
 
-/* Stat cards (Strava) */
-.stat-card {
-  background: var(--code-bg);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 1.5rem;
+/* ProseMirror editor */
+.prose .ProseMirror {
+  outline: none;
+  color: var(--br-ink);
+  line-height: 1.8;
 }
 
-.stat-card__label {
-  font-family: var(--mono);
-  font-size: 0.65rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--text);
-  opacity: 0.5;
-  margin-bottom: 1rem;
-}
-
-.stat-card__value {
-  font-size: 1.5rem;
-  font-weight: 500;
-  color: var(--text-h);
-  letter-spacing: -0.5px;
-}
-
-.stat-card__meta {
-  font-size: 0.8rem;
-  color: var(--text);
-  margin-top: 0.35rem;
-}
-
-/* Home route cards */
-.route-card {
-  display: block;
-  padding: 1.5rem;
-  background: var(--code-bg);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  text-decoration: none;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
-}
-
-.route-card:hover {
-  border-color: var(--accent-border);
-  box-shadow: var(--shadow);
-}
-
-.route-card__label {
-  font-family: var(--mono);
-  font-size: 0.65rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--accent);
-  margin-bottom: 0.5rem;
-}
-
-.route-card__title {
-  font-size: 1.1rem;
-  font-weight: 500;
-  color: var(--text-h);
-  margin-bottom: 0.35rem;
-}
-
-.route-card__desc {
-  font-size: 0.85rem;
-  color: var(--text);
-  line-height: 1.5;
-}
-
-h1,
-h2 {
-  font-family: var(--heading);
-  font-weight: 500;
-  color: var(--text-h);
-}
-
-h1 {
-  font-size: 56px;
-  letter-spacing: -1.68px;
-  margin: 32px 0;
-  @media (max-width: 1024px) {
-    font-size: 36px;
-    margin: 20px 0;
-  }
-}
-h2 {
-  font-size: 24px;
-  line-height: 118%;
-  letter-spacing: -0.24px;
-  margin: 0 0 8px;
-  @media (max-width: 1024px) {
-    font-size: 20px;
-  }
-}
-p {
-  margin: 0;
-}
-
-code,
-.counter {
-  font-family: var(--mono);
-  display: inline-flex;
-  border-radius: 4px;
-  color: var(--text-h);
-}
-
-code {
-  font-size: 15px;
-  line-height: 135%;
-  padding: 4px 8px;
-  background: var(--code-bg);
-}
+.prose .ProseMirror > * + * { margin-top: 1.25em; }

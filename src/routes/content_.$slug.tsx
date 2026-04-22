@@ -24,24 +24,32 @@ export const Route = createFileRoute('/content_/$slug')({
 function ContentPostPage() {
   const post = Route.useLoaderData()
 
+  const BR = {
+    ink: 'var(--br-ink)',
+    hot: 'var(--br-hot)',
+    font: '"JetBrains Mono", ui-monospace, Menlo, monospace',
+  }
+
   return (
-    <main style={{ maxWidth: '720px', padding: '0 2rem 4rem' }}>
-      <div style={{ padding: '3rem 0 2rem', borderBottom: '1px solid var(--border)', marginBottom: '2.5rem' }}>
+    <main style={{ maxWidth: 720, padding: '0 32px 64px', fontFamily: BR.font, color: BR.ink }}>
+      <div style={{ paddingTop: 48, paddingBottom: 32, borderBottom: `3px solid ${BR.ink}`, marginBottom: 40 }}>
         <Link
           to="/content"
-          style={{ fontSize: '0.8rem', color: 'var(--text)', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '0.35rem', marginBottom: '1.5rem' }}
+          style={{ fontSize: 12, color: BR.ink, opacity: 0.6, display: 'inline-flex', alignItems: 'center', gap: 4, marginBottom: 24 }}
         >
           ← Content
         </Link>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.75rem' }}>
-          <span className="content-type-badge" style={{ margin: 0 }}>{post.type}</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 10 }}>
+          <span style={{ fontFamily: BR.font, fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: BR.ink, opacity: 0.5 }}>{post.type}</span>
           {post.created_at && (
-            <span style={{ fontSize: '0.8rem', color: 'var(--text)' }}>
+            <span style={{ fontSize: 12, color: BR.ink, opacity: 0.6 }}>
               {new Date(post.created_at).toLocaleDateString()}
             </span>
           )}
         </div>
-        <h1 style={{ margin: 0 }}>{post.title}</h1>
+        <h1 style={{ margin: 0, color: BR.ink, fontFamily: BR.font, fontSize: 'clamp(1.4rem, 3vw, 2rem)', fontWeight: 900, letterSpacing: '-0.03em', lineHeight: 1.1, textTransform: 'uppercase' }}>
+          {post.title}
+        </h1>
       </div>
       <MarkdownRenderer content={post.markdown ?? ''} />
     </main>

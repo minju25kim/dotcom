@@ -1,5 +1,4 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { useRef, useEffect, useState } from 'react'
 import { supabase } from '../lib/supabase'
 import { useIsMobile } from '../hooks/useIsMobile'
 
@@ -41,120 +40,310 @@ export const Route = createFileRoute('/gears')({
   component: GearsPage,
 })
 
-
-function useInView(threshold = 0.2) {
-  const ref = useRef<HTMLElement>(null)
-  const [inView, setInView] = useState(false)
-
-  useEffect(() => {
-    const el = ref.current
-    if (!el) return
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) setInView(true)
-      },
-      { threshold },
-    )
-    observer.observe(el)
-    return () => observer.disconnect()
-  }, [threshold])
-
-  return { ref, inView }
+const BR = {
+  bg:   'var(--br-bg)',
+  ink:  'var(--br-ink)',
+  hot:  'var(--br-hot)',
+  soft: 'var(--br-soft)',
+  font: '"JetBrains Mono", ui-monospace, Menlo, monospace',
 }
 
-function GearSection({ gear, index }: { gear: GearRow; index: number }) {
-  const { ref, inView } = useInView()
-  const isMobile = useIsMobile()
-  const isEven = index % 2 === 0
-  const imageUrl = resolveImageUrl(gear.image_url)
+const MAINTENANCE = [
+  ['CHAIN', '420 km ago'],
+  ['TIRES', '2,100 km ago'],
+  ['BAR TAPE', '180 km ago'],
+  ['SERVICE', '03/26'],
+]
 
+function SpecsTable({ specs, compact = false }: { specs: Record<string, unknown>; compact?: boolean }) {
+  const entries = Object.entries(specs)
+  if (entries.length === 0) return null
   return (
-    <section
-      ref={ref}
-      style={{
-        display: 'flex',
-        flexDirection: isMobile ? 'column' : (isEven ? 'row' : 'row-reverse'),
-        alignItems: isMobile ? 'stretch' : 'center',
-        minHeight: isMobile ? 'auto' : '100vh',
-        padding: isMobile ? '2rem 1.25rem' : '2rem',
-        gap: '2rem',
-        borderBottom: '1px solid var(--border)',
-        opacity: inView ? 1 : 0,
-        transform: inView
-          ? 'none'
-          : `translateY(40px) translateX(${isEven ? '-20px' : '20px'})`,
-        transition: 'opacity 0.9s ease, transform 0.9s ease',
-      }}
-    >
-      {/* Image */}
+    <div style={{ border: `${compact ? 2 : 2.5}px solid ${BR.ink}` }}>
+      {entries.map(([k, v], j) => (
+        <div key={j} style={{
+          display: 'grid', gridTemplateColumns: '1fr 1fr',
+          borderBottom: j < entries.length - 1 ? `1.5px solid ${BR.ink}` : 'none',
+        }}>
+          <div style={{ padding: compact ? '6px 10px' : '6px 12px', borderRight: `1.5px solid ${BR.ink}`, fontSize: 10, letterSpacing: '0.1em' }}>
+            {k}
+          </div>
+          <div style={{ padding: compact ? '6px 10px' : '6px 12px', fontSize: compact ? 11 : 12, fontWeight: 700 }}>
+            {String(v)}
+          </div>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+function HeroGear({ gear }: { gear: GearRow }) {
+  const imageUrl = resolveImageUrl(gear.image_url)
+  return (
+    <div style={{
+      display: 'grid', gridTemplateColumns: '1.25fr 1fr',
+      borderBottom: `3px solid ${BR.ink}`, flexShrink: 0,
+    }} className="hero-gear">
       <div style={{
-        flex: isMobile ? 'none' : '0 0 55%',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        height: isMobile ? '260px' : '500px',
+        borderRight: `3px solid ${BR.ink}`, position: 'relative',
+        background: BR.bg, minHeight: 300,
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
       }}>
-        {imageUrl && (
-          <img
-            src={imageUrl}
-            alt={gear.name}
-            style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
-          />
+        {imageUrl ? (
+          <img src={imageUrl} alt={gear.name} style={{ maxWidth: '85%', maxHeight: '85%', objectFit: 'contain' }} />
+        ) : (
+          <div style={{ background: BR.bg, border: `3px solid ${BR.ink}`, padding: '14px 24px', fontSize: 13, fontWeight: 700 }}>
+            [ PHOTO ]
+          </div>
+        )}
+        <div style={{ position: 'absolute', top: 14, left: 16, fontSize: 10, letterSpacing: '0.15em' }}>
+          ◎ 01 / {gear.category.toUpperCase()}
+        </div>
+        {gear.brand && (
+          <div style={{ position: 'absolute', bottom: 14, left: 16, fontSize: 10, letterSpacing: '0.15em' }}>
+            {gear.brand.toUpperCase()}
+          </div>
         )}
       </div>
-
-      {/* Info panel */}
-      <div style={{ flex: 1, textAlign: 'left', padding: isMobile ? '0' : '1rem' }}>
-        <span
-          style={{
-            display: 'inline-block',
-            padding: '4px 14px',
-            borderRadius: '100px',
-            fontSize: '0.7rem',
-            fontWeight: 700,
-            letterSpacing: '0.1em',
-            textTransform: 'uppercase',
-            background: 'var(--code-bg)',
-            color: 'var(--text)',
-            border: '1px solid var(--border)',
-            marginBottom: '1.25rem',
-          }}
-        >
-          {gear.category}
-        </span>
-
-        <h2
-          style={{
-            margin: '0 0 4px',
-            color: 'var(--text-h)',
-            fontSize: isMobile ? '1.5rem' : '2rem',
-            letterSpacing: '-0.5px',
-            lineHeight: 1.1,
-          }}
-        >
+      <div style={{ padding: '20px 26px' }}>
+        <div style={{ display: 'inline-block', border: `2px solid ${BR.ink}`, padding: '3px 10px', fontSize: 11, fontWeight: 700 }}>
+          {gear.category.toUpperCase()}
+        </div>
+        <div style={{ fontSize: 'clamp(28px, 3.5vw, 48px)', fontWeight: 900, letterSpacing: '-0.04em', lineHeight: 0.95, marginTop: 10, textTransform: 'uppercase' }}>
           {gear.name}
-        </h2>
-        <p style={{ color: 'var(--text)', fontWeight: 600, margin: '0 0 1rem', fontSize: '0.9rem' }}>
-          {gear.brand}
-          {gear.model_year ? ` · ${gear.model_year}` : ''}
-        </p>
+        </div>
+        <div style={{ fontSize: 13, marginTop: 4 }}>
+          {gear.brand}{gear.model_year ? ` · ${gear.model_year}` : ''}
+        </div>
+        {gear.description && (
+          <div style={{ fontSize: 11, marginTop: 10, lineHeight: 1.55, maxWidth: 400 }}>
+            {gear.description}
+          </div>
+        )}
+        {gear.specs && Object.keys(gear.specs).length > 0 && (
+          <div style={{ marginTop: 14 }}>
+            <SpecsTable specs={gear.specs} />
+          </div>
+        )}
       </div>
-    </section>
+    </div>
+  )
+}
+
+function AccessoryCard({ gear, index }: { gear: GearRow; index: number }) {
+  const imageUrl = resolveImageUrl(gear.image_url)
+  const specs = gear.specs ? Object.entries(gear.specs).slice(0, 3) : []
+  return (
+    <div style={{ borderRight: index < 2 ? `3px solid ${BR.ink}` : 'none', display: 'flex', flexDirection: 'column' }}>
+      <div style={{
+        flex: 1, position: 'relative', borderBottom: `3px solid ${BR.ink}`,
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        background: BR.bg, minHeight: 160,
+      }}>
+        {imageUrl ? (
+          <img src={imageUrl} alt={gear.name} style={{ maxWidth: '70%', maxHeight: '80%', objectFit: 'contain' }} />
+        ) : (
+          <div style={{ fontSize: 11, opacity: 0.4 }}>[ PHOTO ]</div>
+        )}
+        <div style={{ position: 'absolute', top: 12, left: 14, fontSize: 10, letterSpacing: '0.15em' }}>
+          ◎ 0{index + 2} / {gear.category.toUpperCase()}
+        </div>
+      </div>
+      <div style={{ padding: '12px 18px' }}>
+        <div style={{ fontSize: 22, fontWeight: 900, letterSpacing: '-0.03em', lineHeight: 1 }}>{gear.name}</div>
+        <div style={{ fontSize: 11, marginTop: 3 }}>{gear.brand}{gear.model_year ? ` · ${gear.model_year}` : ''}</div>
+        {specs.length > 0 && (
+          <div style={{ marginTop: 8, display: 'grid', gridTemplateColumns: `repeat(${specs.length}, 1fr)`, border: `2px solid ${BR.ink}` }}>
+            {specs.map(([k, v], j) => (
+              <div key={j} style={{ padding: '5px 6px', borderRight: j < specs.length - 1 ? `1.5px solid ${BR.ink}` : 'none' }}>
+                <div style={{ fontSize: 8, letterSpacing: '0.1em' }}>{k}</div>
+                <div style={{ fontSize: 11, fontWeight: 700, marginTop: 1 }}>{String(v)}</div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+function MobileGears({ gears }: { gears: GearRow[] }) {
+  const hero = gears[0]
+  const rest = gears.slice(1)
+  const heroImageUrl = hero ? resolveImageUrl(hero.image_url) : undefined
+
+  return (
+    <div style={{ flex: 1, overflow: 'auto', fontFamily: BR.font, background: BR.bg, color: BR.ink }}>
+      {/* Header */}
+      <div style={{ padding: '18px 16px 14px', borderBottom: `2.5px solid ${BR.ink}` }}>
+        <div style={{ fontSize: 10, letterSpacing: '0.18em' }}>━ GEARS ━━━━━━━━━━━━━</div>
+        <div style={{ fontSize: 54, fontWeight: 900, letterSpacing: '-0.04em', lineHeight: 0.95, textTransform: 'uppercase', marginTop: 6 }}>
+          WHAT I RIDE.
+        </div>
+      </div>
+
+      {/* Hero gear */}
+      {hero && (
+        <>
+          <div style={{
+            height: 200, borderBottom: `2.5px solid ${BR.ink}`,
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            position: 'relative', background: BR.bg,
+          }}>
+            {heroImageUrl ? (
+              <img src={heroImageUrl} alt={hero.name} style={{ maxWidth: '80%', maxHeight: '85%', objectFit: 'contain' }} />
+            ) : (
+              <div style={{ background: BR.bg, border: `2px solid ${BR.ink}`, padding: '8px 14px', fontSize: 10, fontWeight: 700 }}>
+                [ PHOTO ]
+              </div>
+            )}
+            <div style={{ position: 'absolute', top: 10, left: 12, fontSize: 9, letterSpacing: '0.15em' }}>◎ 01 / {hero.category.toUpperCase()}</div>
+            {hero.brand && (
+              <div style={{ position: 'absolute', bottom: 10, left: 12, fontSize: 9, letterSpacing: '0.15em' }}>{hero.brand.toUpperCase()}</div>
+            )}
+          </div>
+          <div style={{ padding: 16, borderBottom: `2.5px solid ${BR.ink}` }}>
+            <div style={{ display: 'inline-block', border: `2px solid ${BR.ink}`, padding: '2px 8px', fontSize: 10, fontWeight: 700 }}>
+              {hero.category.toUpperCase()}
+            </div>
+            <div style={{ fontSize: 36, fontWeight: 900, letterSpacing: '-0.03em', lineHeight: 0.95, marginTop: 10, textTransform: 'uppercase' }}>
+              {hero.name}
+            </div>
+            <div style={{ fontSize: 12, marginTop: 4 }}>
+              {hero.brand}{hero.model_year ? ` · ${hero.model_year}` : ''}
+            </div>
+            {hero.description && (
+              <div style={{ fontSize: 11, marginTop: 12, lineHeight: 1.55 }}>{hero.description}</div>
+            )}
+            {hero.specs && Object.keys(hero.specs).length > 0 && (
+              <div style={{ marginTop: 16 }}>
+                <SpecsTable specs={hero.specs} compact />
+              </div>
+            )}
+          </div>
+        </>
+      )}
+
+      {/* Remaining gears */}
+      {rest.map((gear, i) => {
+        const imageUrl = resolveImageUrl(gear.image_url)
+        const topSpecs = gear.specs ? Object.entries(gear.specs).slice(0, 3) : []
+        return (
+          <div key={gear.id} style={{ borderBottom: `2.5px solid ${BR.ink}` }}>
+            {imageUrl && (
+              <div style={{ height: 140, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', background: BR.bg, borderBottom: `1.5px solid ${BR.ink}` }}>
+                <img src={imageUrl} alt={gear.name} style={{ maxWidth: '70%', maxHeight: '80%', objectFit: 'contain' }} />
+                <div style={{ position: 'absolute', top: 8, left: 10, fontSize: 9, letterSpacing: '0.15em' }}>◎ 0{i + 2} / {gear.category.toUpperCase()}</div>
+              </div>
+            )}
+            <div style={{ padding: '12px 16px' }}>
+              <div style={{ fontSize: 22, fontWeight: 900, letterSpacing: '-0.03em', lineHeight: 1 }}>{gear.name}</div>
+              <div style={{ fontSize: 11, marginTop: 3, opacity: 0.7 }}>{gear.brand}{gear.model_year ? ` · ${gear.model_year}` : ''}</div>
+              {topSpecs.length > 0 && (
+                <div style={{ marginTop: 8, display: 'grid', gridTemplateColumns: `repeat(${topSpecs.length}, 1fr)`, border: `2px solid ${BR.ink}` }}>
+                  {topSpecs.map(([k, v], j) => (
+                    <div key={j} style={{ padding: '5px 6px', borderRight: j < topSpecs.length - 1 ? `1.5px solid ${BR.ink}` : 'none' }}>
+                      <div style={{ fontSize: 8, letterSpacing: '0.1em' }}>{k}</div>
+                      <div style={{ fontSize: 11, fontWeight: 700, marginTop: 1 }}>{String(v)}</div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        )
+      })}
+
+      {/* Maintenance */}
+      <div style={{ padding: '12px 16px', borderBottom: `2.5px solid ${BR.ink}` }}>
+        <div style={{ fontSize: 10, letterSpacing: '0.18em', marginBottom: 8 }}>▼ MAINTENANCE LOG</div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 6, fontSize: 11 }}>
+          {MAINTENANCE.map(([k, v], j) => (
+            <div key={j}><b>{k}</b> · {v}</div>
+          ))}
+        </div>
+      </div>
+
+      {/* Wishlist */}
+      <div style={{ margin: 16, padding: '12px 14px', background: BR.hot, color: 'white' }}>
+        <div style={{ fontSize: 9, letterSpacing: '0.15em' }}>WISHLIST · NEXT</div>
+        <div style={{ fontSize: 16, fontWeight: 900, marginTop: 4 }}>CARBON ENDURANCE FRAME</div>
+      </div>
+    </div>
   )
 }
 
 function GearsPage() {
   const gears = Route.useLoaderData()
+  const isMobile = useIsMobile()
+  const hero = gears[0]
+  const accessories = gears.slice(1, 4)
+
+  if (isMobile) {
+    return (
+      <main style={{ background: BR.bg, color: BR.ink, fontFamily: BR.font, flex: 1, display: 'flex', flexDirection: 'column' }}>
+        <MobileGears gears={gears} />
+      </main>
+    )
+  }
 
   return (
-    <main>
-      <header className="page-header">
-        <h1 style={{ margin: 0 }}>Gears</h1>
-      </header>
+    <main style={{ background: BR.bg, color: BR.ink, fontFamily: BR.font, flex: 1, display: 'flex', flexDirection: 'column' }}>
+      {/* Header */}
+      <div style={{
+        padding: '18px 28px 14px', borderBottom: `3px solid ${BR.ink}`,
+        display: 'flex', alignItems: 'flex-end', gap: 40, flexWrap: 'wrap',
+      }}>
+        <div>
+          <div style={{ fontSize: 11, letterSpacing: '0.2em' }}>━━ GEARS / THE RIDE SYSTEM ━━━━━━━━━━━━━━━━━━</div>
+          <div style={{ fontSize: 'clamp(44px, 5.5vw, 72px)', fontWeight: 900, letterSpacing: '-0.05em', lineHeight: 0.95, textTransform: 'uppercase', marginTop: 8 }}>
+            WHAT I RIDE.
+          </div>
+        </div>
+        <div style={{ flex: 1 }} />
+        <div style={{ display: 'flex', border: `3px solid ${BR.ink}` }}>
+          {[
+            [String(gears.length), 'ITEMS'],
+            ['14,200', 'KM'],
+            ['2016', 'SINCE'],
+          ].map(([v, k], i, a) => (
+            <div key={i} style={{ padding: '12px 18px', borderRight: i < a.length - 1 ? `3px solid ${BR.ink}` : 'none', textAlign: 'center' }}>
+              <div style={{ fontSize: 24, fontWeight: 900, lineHeight: 1, letterSpacing: '-0.03em' }}>{v}</div>
+              <div style={{ fontSize: 10, marginTop: 4, letterSpacing: '0.12em' }}>{k}</div>
+            </div>
+          ))}
+        </div>
+      </div>
 
-      {gears.map((gear, index) => (
-        <GearSection key={gear.id} gear={gear} index={index} />
-      ))}
+      {hero && <HeroGear gear={hero} />}
+
+      {accessories.length > 0 && (
+        <div style={{
+          flex: 1, display: 'grid',
+          gridTemplateColumns: `repeat(${Math.min(accessories.length, 3)}, 1fr)`,
+          borderBottom: `3px solid ${BR.ink}`,
+        }}>
+          {accessories.map((g, i) => (
+            <AccessoryCard key={g.id} gear={g} index={i} />
+          ))}
+        </div>
+      )}
+
+      {/* Maintenance + wishlist */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1.4fr 1fr', borderBottom: `3px solid ${BR.ink}`, flexShrink: 0 }}>
+        <div style={{ padding: '12px 28px', borderRight: `3px solid ${BR.ink}` }}>
+          <div style={{ fontSize: 10, letterSpacing: '0.18em', marginBottom: 6 }}>▼ MAINTENANCE LOG</div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 6, fontSize: 11 }}>
+            {MAINTENANCE.map(([k, v], j) => (
+              <div key={j}><b>{k}</b> · {v}</div>
+            ))}
+          </div>
+        </div>
+        <div style={{ padding: '12px 20px', background: BR.hot, color: 'white', display: 'flex', alignItems: 'center', gap: 12 }}>
+          <div style={{ fontSize: 10, letterSpacing: '0.15em' }}>WISHLIST · NEXT</div>
+          <div style={{ fontSize: 16, fontWeight: 900, flex: 1 }}>CARBON ENDURANCE FRAME</div>
+        </div>
+      </div>
     </main>
   )
 }
