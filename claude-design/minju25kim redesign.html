@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>minju25kim · V2 Brutalist — all routes + accents</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; padding: 0; background: #f0eee9; font-family: "JetBrains Mono", ui-monospace, Menlo, monospace; }
+  * { box-sizing: border-box; }
+  a { color: inherit; text-decoration: none; cursor: pointer; }
+  @keyframes marq { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+</style>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel" src="design-canvas.jsx"></script>
+<script type="text/babel" src="ios-frame.jsx"></script>
+<script type="text/babel" src="variations/v2-shared.jsx"></script>
+<script type="text/babel" src="variations/v2-desktop.jsx"></script>
+<script type="text/babel" src="variations/v2-mobile.jsx"></script>
+<script type="text/babel" src="variations/v2-gears-detailed.jsx"></script>
+<script type="text/babel" src="variations/v2-themed.jsx"></script>
+
+<script type="text/babel" data-presets="react">
+function MobileShell({ children }) {
+  return <IOSDevice width={390} height={844}>{children}</IOSDevice>;
+}
+
+function App() {
+  return (
+    <DesignCanvas>
+      <DCSection id="desktop" title="V2 · Brutalist — Desktop" subtitle="All five routes at 1440×900. Email → minju25kim@gmail.com (AVAILABLE chip is now a mailto).">
+        <DCArtboard id="d-home" label="/ · Landing" width={1440} height={900}><V2Landing /></DCArtboard>
+        <DCArtboard id="d-proj" label="/projects" width={1440} height={900}><V2Projects /></DCArtboard>
+        <DCArtboard id="d-gears" label="/gears · DETAILED (real product photos)" width={1440} height={900}><V2GearsDetailed /></DCArtboard>
+        <DCArtboard id="d-strava" label="/strava" width={1440} height={900}><V2Strava /></DCArtboard>
+        <DCArtboard id="d-content" label="/content" width={1440} height={900}><V2Content /></DCArtboard>
+      </DCSection>
+
+      {/* ─── Final pair: C1 light + C4 dark ─────────────────────────── */}
+      <DCSection id="final-light" title="C1 · Light theme" subtitle="Cream + ink + orange. No sticker on the bike — just the MERIDA SCULTURA 100 text label.">
+        <DCArtboard id="final-c1" label="C1 · Light" width={1440} height={900}>
+          <V2LandingThemed theme={{ name: 'C1 light', bg: '#f4f1ea', ink: '#0a0a0a', accent: '#ff6a00', soft: '#e8e2d1' }} />
+        </DCArtboard>
+      </DCSection>
+
+      <DCSection id="final-dark" title="C4 · Dark theme" subtitle="Deep navy + cream + softened orange. Same layout, inverted.">
+        <DCArtboard id="final-c4" label="C4 · Dark" width={1440} height={900}>
+          <V2LandingThemed theme={{ name: 'C4 dark', bg: '#0b1e3d', ink: '#f4f1ea', accent: '#ff8c42', soft: '#14284a' }} />
+        </DCArtboard>
+      </DCSection>
+
+      <DCSection id="mobile" title="V2 · Brutalist — Mobile" subtitle="Same routes, iPhone. Gears page now shows all four items with their real product photos.">
+        <DCArtboard id="m-home" label="/ · Landing" width={390} height={844}><MobileShell><M2Landing /></MobileShell></DCArtboard>
+        <DCArtboard id="m-proj" label="/projects" width={390} height={844}><MobileShell><M2Projects /></MobileShell></DCArtboard>
+        <DCArtboard id="m-gears" label="/gears · DETAILED" width={390} height={844}><MobileShell><M2GearsDetailed /></MobileShell></DCArtboard>
+        <DCArtboard id="m-strava" label="/strava" width={390} height={844}><MobileShell><M2Strava /></MobileShell></DCArtboard>
+        <DCArtboard id="m-content" label="/content" width={390} height={844}><MobileShell><M2Content /></MobileShell></DCArtboard>
+      </DCSection>
+    </DesignCanvas>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>

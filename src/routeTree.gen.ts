@@ -13,11 +13,15 @@ import { Route as StravaRouteImport } from './routes/strava'
 import { Route as ProjectsRouteImport } from './routes/projects'
 import { Route as GearsRouteImport } from './routes/gears'
 import { Route as DevRouteImport } from './routes/dev'
+import { Route as ContentRouteImport } from './routes/content'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DevNewRouteImport } from './routes/dev_.new'
 import { Route as DevSlugRouteImport } from './routes/dev_.$slug'
+import { Route as ContentNewRouteImport } from './routes/content_.new'
+import { Route as ContentSlugRouteImport } from './routes/content_.$slug'
 import { Route as DevEditSlugRouteImport } from './routes/dev_.edit.$slug'
+import { Route as ContentEditSlugRouteImport } from './routes/content_.edit.$slug'
 
 const StravaRoute = StravaRouteImport.update({
   id: '/strava',
@@ -37,6 +41,11 @@ const GearsRoute = GearsRouteImport.update({
 const DevRoute = DevRouteImport.update({
   id: '/dev',
   path: '/dev',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContentRoute = ContentRouteImport.update({
+  id: '/content',
+  path: '/content',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminRoute = AdminRouteImport.update({
@@ -59,44 +68,71 @@ const DevSlugRoute = DevSlugRouteImport.update({
   path: '/dev/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ContentNewRoute = ContentNewRouteImport.update({
+  id: '/content_/new',
+  path: '/content/new',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContentSlugRoute = ContentSlugRouteImport.update({
+  id: '/content_/$slug',
+  path: '/content/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DevEditSlugRoute = DevEditSlugRouteImport.update({
   id: '/dev_/edit/$slug',
   path: '/dev/edit/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContentEditSlugRoute = ContentEditSlugRouteImport.update({
+  id: '/content_/edit/$slug',
+  path: '/content/edit/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
+  '/content': typeof ContentRoute
   '/dev': typeof DevRoute
   '/gears': typeof GearsRoute
   '/projects': typeof ProjectsRoute
   '/strava': typeof StravaRoute
+  '/content/$slug': typeof ContentSlugRoute
+  '/content/new': typeof ContentNewRoute
   '/dev/$slug': typeof DevSlugRoute
   '/dev/new': typeof DevNewRoute
+  '/content/edit/$slug': typeof ContentEditSlugRoute
   '/dev/edit/$slug': typeof DevEditSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
+  '/content': typeof ContentRoute
   '/dev': typeof DevRoute
   '/gears': typeof GearsRoute
   '/projects': typeof ProjectsRoute
   '/strava': typeof StravaRoute
+  '/content/$slug': typeof ContentSlugRoute
+  '/content/new': typeof ContentNewRoute
   '/dev/$slug': typeof DevSlugRoute
   '/dev/new': typeof DevNewRoute
+  '/content/edit/$slug': typeof ContentEditSlugRoute
   '/dev/edit/$slug': typeof DevEditSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
+  '/content': typeof ContentRoute
   '/dev': typeof DevRoute
   '/gears': typeof GearsRoute
   '/projects': typeof ProjectsRoute
   '/strava': typeof StravaRoute
+  '/content_/$slug': typeof ContentSlugRoute
+  '/content_/new': typeof ContentNewRoute
   '/dev_/$slug': typeof DevSlugRoute
   '/dev_/new': typeof DevNewRoute
+  '/content_/edit/$slug': typeof ContentEditSlugRoute
   '/dev_/edit/$slug': typeof DevEditSlugRoute
 }
 export interface FileRouteTypes {
@@ -104,46 +140,62 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/admin'
+    | '/content'
     | '/dev'
     | '/gears'
     | '/projects'
     | '/strava'
+    | '/content/$slug'
+    | '/content/new'
     | '/dev/$slug'
     | '/dev/new'
+    | '/content/edit/$slug'
     | '/dev/edit/$slug'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/admin'
+    | '/content'
     | '/dev'
     | '/gears'
     | '/projects'
     | '/strava'
+    | '/content/$slug'
+    | '/content/new'
     | '/dev/$slug'
     | '/dev/new'
+    | '/content/edit/$slug'
     | '/dev/edit/$slug'
   id:
     | '__root__'
     | '/'
     | '/admin'
+    | '/content'
     | '/dev'
     | '/gears'
     | '/projects'
     | '/strava'
+    | '/content_/$slug'
+    | '/content_/new'
     | '/dev_/$slug'
     | '/dev_/new'
+    | '/content_/edit/$slug'
     | '/dev_/edit/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRoute
+  ContentRoute: typeof ContentRoute
   DevRoute: typeof DevRoute
   GearsRoute: typeof GearsRoute
   ProjectsRoute: typeof ProjectsRoute
   StravaRoute: typeof StravaRoute
+  ContentSlugRoute: typeof ContentSlugRoute
+  ContentNewRoute: typeof ContentNewRoute
   DevSlugRoute: typeof DevSlugRoute
   DevNewRoute: typeof DevNewRoute
+  ContentEditSlugRoute: typeof ContentEditSlugRoute
   DevEditSlugRoute: typeof DevEditSlugRoute
 }
 
@@ -177,6 +229,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DevRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/content': {
+      id: '/content'
+      path: '/content'
+      fullPath: '/content'
+      preLoaderRoute: typeof ContentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin': {
       id: '/admin'
       path: '/admin'
@@ -205,11 +264,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DevSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/content_/new': {
+      id: '/content_/new'
+      path: '/content/new'
+      fullPath: '/content/new'
+      preLoaderRoute: typeof ContentNewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/content_/$slug': {
+      id: '/content_/$slug'
+      path: '/content/$slug'
+      fullPath: '/content/$slug'
+      preLoaderRoute: typeof ContentSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/dev_/edit/$slug': {
       id: '/dev_/edit/$slug'
       path: '/dev/edit/$slug'
       fullPath: '/dev/edit/$slug'
       preLoaderRoute: typeof DevEditSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/content_/edit/$slug': {
+      id: '/content_/edit/$slug'
+      path: '/content/edit/$slug'
+      fullPath: '/content/edit/$slug'
+      preLoaderRoute: typeof ContentEditSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -218,12 +298,16 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRoute,
+  ContentRoute: ContentRoute,
   DevRoute: DevRoute,
   GearsRoute: GearsRoute,
   ProjectsRoute: ProjectsRoute,
   StravaRoute: StravaRoute,
+  ContentSlugRoute: ContentSlugRoute,
+  ContentNewRoute: ContentNewRoute,
   DevSlugRoute: DevSlugRoute,
   DevNewRoute: DevNewRoute,
+  ContentEditSlugRoute: ContentEditSlugRoute,
   DevEditSlugRoute: DevEditSlugRoute,
 }
 export const routeTree = rootRouteImport

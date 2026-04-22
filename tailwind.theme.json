@@ -1,0 +1,55 @@
+{
+  "theme": {
+    "extend": {
+      "colors": {
+        "accent": {
+          "DEFAULT": "#3ecf8e",
+          "hover": "#006239",
+          "subtle": "rgba(62, 207, 142, 0.08)",
+          "border": "rgba(62, 207, 142, 0.25)"
+        },
+        "muted": {
+          "DEFAULT": "#898989",
+          "dark": "#898989"
+        },
+        "heading": {
+          "DEFAULT": "#2e2e2e",
+          "dark": "#fafafa"
+        },
+        "surface": {
+          "DEFAULT": "#fafafa",
+          "dark": "#121212"
+        },
+        "card": {
+          "DEFAULT": "#171717",
+          "dark": "#242424"
+        },
+        "on-card": "#fafafa",
+        "border": {
+          "DEFAULT": "#e0e0e0",
+          "dark": "#2e2e2e"
+        }
+      },
+      "fontFamily": {
+        "sans": ["DM Sans", "system-ui", "sans-serif"],
+        "mono": ["Source Code Pro", "ui-monospace", "monospace"]
+      },
+      "fontSize": {
+        "badge": ["0.65rem", { "letterSpacing": "0.1em" }],
+        "nav": "0.875rem",
+        "body": "18px",
+        "h1": ["56px", { "letterSpacing": "-1.68px" }],
+        "h2": ["24px", { "letterSpacing": "-0.24px" }]
+      },
+      "borderRadius": {
+        "sm": "6px",
+        "md": "8px",
+        "lg": "12px",
+        "xl": "16px"
+      },
+      "spacing": {
+        "nav": "56px"
+      }
+    }
+  }
+}
