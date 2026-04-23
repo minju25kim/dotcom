@@ -2,9 +2,12 @@ import { createFileRoute, redirect, useNavigate } from '@tanstack/react-router'
 import { supabase } from '../lib/supabase'
 import { EditorForm } from '../components/EditorForm'
 
+const ADMIN_GITHUB_USERNAME = 'minju25kim'
+
 export const Route = createFileRoute('/content_/new')({
   beforeLoad: ({ context }) => {
-    if (!context.session) throw redirect({ to: '/admin' })
+    const username = context.session?.user?.user_metadata?.user_name
+    if (username !== ADMIN_GITHUB_USERNAME) throw redirect({ to: '/admin' })
   },
   component: NewPostPage,
 })
@@ -12,14 +15,15 @@ export const Route = createFileRoute('/content_/new')({
 function NewPostPage() {
   const navigate = useNavigate()
 
-  const handleSubmit = async ({ title, slug, published, markdown }: {
+  const handleSubmit = async ({ type, title, slug, published, markdown }: {
+    type: string
     title: string
     slug: string
     published: boolean
     markdown: string
   }) => {
     const { error } = await supabase.from('content').insert({
-      type: 'dev',
+      type,
       title,
       slug,
       published,
@@ -32,9 +36,13 @@ function NewPostPage() {
   }
 
   return (
-    <div>
-      <h1 style={{ padding: '2rem 2rem 0' }}>New Post</h1>
+    <main style={{ background: 'var(--br-bg)', color: 'var(--br-ink)', flex: 1 }}>
+      <div style={{ padding: '28px 28px 0', borderBottom: '3px solid var(--br-ink)', paddingBottom: 18 }}>
+        <div style={{ fontSize: 11, letterSpacing: '0.15em', fontFamily: '"JetBrains Mono", monospace' }}>
+          ━━ CONTENT / NEW POST
+        </div>
+      </div>
       <EditorForm onSubmit={handleSubmit} submitLabel="Publish" />
-    </div>
+    </main>
   )
 }

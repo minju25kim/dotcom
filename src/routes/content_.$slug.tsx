@@ -1,6 +1,7 @@
 import { createFileRoute, Link, notFound } from '@tanstack/react-router'
 import { supabase } from '../lib/supabase'
 import { MarkdownRenderer } from '../components/MarkdownRenderer'
+import { useAuth } from '../context/AuthContext'
 import type { ContentPost } from './content'
 
 async function fetchPost(slug: string): Promise<ContentPost> {
@@ -23,6 +24,7 @@ export const Route = createFileRoute('/content_/$slug')({
 
 function ContentPostPage() {
   const post = Route.useLoaderData()
+  const { isAdmin } = useAuth()
 
   const BR = {
     ink: 'var(--br-ink)',
@@ -33,12 +35,22 @@ function ContentPostPage() {
   return (
     <main style={{ maxWidth: 720, padding: '0 32px 64px', fontFamily: BR.font, color: BR.ink }}>
       <div style={{ paddingTop: 48, paddingBottom: 32, borderBottom: `3px solid ${BR.ink}`, marginBottom: 40 }}>
-        <Link
-          to="/content"
-          style={{ fontSize: 12, color: BR.ink, opacity: 0.6, display: 'inline-flex', alignItems: 'center', gap: 4, marginBottom: 24 }}
-        >
-          ← Content
-        </Link>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
+          <Link
+            to="/content"
+            style={{ fontSize: 12, color: BR.ink, opacity: 0.6, display: 'inline-flex', alignItems: 'center', gap: 4 }}
+          >
+            ← Content
+          </Link>
+          {isAdmin && (
+            <a
+              href={`/content/edit/${post.slug}`}
+              style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', color: BR.hot, border: `2px solid ${BR.hot}`, padding: '3px 10px' }}
+            >
+              EDIT
+            </a>
+          )}
+        </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 10 }}>
           <span style={{ fontFamily: BR.font, fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: BR.ink, opacity: 0.5 }}>{post.type}</span>
           {post.created_at && (
