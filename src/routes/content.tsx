@@ -251,7 +251,7 @@ function ContentPage() {
       )}
 
       <style>{`
-        @media (max-width: 1023px) {
+        @media (max-width: 1279px) {
           .content-row {
             grid-template-columns: 60px 1fr 18px !important;
             gap: 8px !important;

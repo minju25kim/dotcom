@@ -63,10 +63,10 @@ function SpecsTable({ specs, compact = false }: { specs: Record<string, unknown>
           display: 'grid', gridTemplateColumns: '1fr 1fr',
           borderBottom: j < entries.length - 1 ? `1.5px solid ${BR.ink}` : 'none',
         }}>
-          <div style={{ padding: compact ? '6px 10px' : '6px 12px', borderRight: `1.5px solid ${BR.ink}`, fontSize: 10, letterSpacing: '0.1em' }}>
+          <div style={{ padding: compact ? '6px 10px' : '6px 12px', borderRight: `1.5px solid ${BR.ink}`, fontSize: compact ? 11 : 13, letterSpacing: '0.1em' }}>
             {k}
           </div>
-          <div style={{ padding: compact ? '6px 10px' : '6px 12px', fontSize: compact ? 11 : 12, fontWeight: 700 }}>
+          <div style={{ padding: compact ? '6px 10px' : '6px 12px', fontSize: compact ? 12 : 14, fontWeight: 700 }}>
             {String(v)}
           </div>
         </div>
@@ -94,27 +94,27 @@ function HeroGear({ gear }: { gear: GearRow }) {
             [ PHOTO ]
           </div>
         )}
-        <div style={{ position: 'absolute', top: 14, left: 16, fontSize: 10, letterSpacing: '0.15em' }}>
+        <div style={{ position: 'absolute', top: 14, left: 16, fontSize: 13, letterSpacing: '0.15em' }}>
           ◎ 01 / {gear.category.toUpperCase()}
         </div>
         {gear.brand && (
-          <div style={{ position: 'absolute', bottom: 14, left: 16, fontSize: 10, letterSpacing: '0.15em' }}>
+          <div style={{ position: 'absolute', bottom: 14, left: 16, fontSize: 13, letterSpacing: '0.15em' }}>
             {gear.brand.toUpperCase()}
           </div>
         )}
       </div>
       <div style={{ padding: '20px 26px' }}>
-        <div style={{ display: 'inline-block', border: `2px solid ${BR.ink}`, padding: '3px 10px', fontSize: 11, fontWeight: 700 }}>
+        <div style={{ display: 'inline-block', border: `2px solid ${BR.ink}`, padding: '3px 10px', fontSize: 13, fontWeight: 700 }}>
           {gear.category.toUpperCase()}
         </div>
-        <div style={{ fontSize: 'clamp(28px, 3.5vw, 48px)', fontWeight: 900, letterSpacing: '-0.04em', lineHeight: 0.95, marginTop: 10, textTransform: 'uppercase' }}>
+        <div style={{ fontSize: 'clamp(32px, 3.5vw, 52px)', fontWeight: 900, letterSpacing: '-0.04em', lineHeight: 0.95, marginTop: 10, textTransform: 'uppercase' }}>
           {gear.name}
         </div>
-        <div style={{ fontSize: 13, marginTop: 4 }}>
+        <div style={{ fontSize: 15, marginTop: 4 }}>
           {gear.brand}{gear.model_year ? ` · ${gear.model_year}` : ''}
         </div>
         {gear.description && (
-          <div style={{ fontSize: 11, marginTop: 10, lineHeight: 1.55, maxWidth: 400 }}>
+          <div style={{ fontSize: 14, marginTop: 10, lineHeight: 1.55, maxWidth: 400 }}>
             {gear.description}
           </div>
         )}
@@ -143,19 +143,19 @@ function AccessoryCard({ gear, index }: { gear: GearRow; index: number }) {
         ) : (
           <div style={{ fontSize: 11, opacity: 0.4 }}>[ PHOTO ]</div>
         )}
-        <div style={{ position: 'absolute', top: 12, left: 14, fontSize: 10, letterSpacing: '0.15em' }}>
+        <div style={{ position: 'absolute', top: 12, left: 14, fontSize: 13, letterSpacing: '0.15em' }}>
           ◎ 0{index + 2} / {gear.category.toUpperCase()}
         </div>
       </div>
-      <div style={{ padding: '12px 18px' }}>
-        <div style={{ fontSize: 22, fontWeight: 900, letterSpacing: '-0.03em', lineHeight: 1 }}>{gear.name}</div>
-        <div style={{ fontSize: 11, marginTop: 3 }}>{gear.brand}{gear.model_year ? ` · ${gear.model_year}` : ''}</div>
+      <div style={{ padding: '14px 18px' }}>
+        <div style={{ fontSize: 26, fontWeight: 900, letterSpacing: '-0.03em', lineHeight: 1 }}>{gear.name}</div>
+        <div style={{ fontSize: 13, marginTop: 3 }}>{gear.brand}{gear.model_year ? ` · ${gear.model_year}` : ''}</div>
         {specs.length > 0 && (
-          <div style={{ marginTop: 8, display: 'grid', gridTemplateColumns: `repeat(${specs.length}, 1fr)`, border: `2px solid ${BR.ink}` }}>
+          <div style={{ marginTop: 10, display: 'grid', gridTemplateColumns: `repeat(${specs.length}, 1fr)`, border: `2px solid ${BR.ink}` }}>
             {specs.map(([k, v], j) => (
-              <div key={j} style={{ padding: '5px 6px', borderRight: j < specs.length - 1 ? `1.5px solid ${BR.ink}` : 'none' }}>
-                <div style={{ fontSize: 8, letterSpacing: '0.1em' }}>{k}</div>
-                <div style={{ fontSize: 11, fontWeight: 700, marginTop: 1 }}>{String(v)}</div>
+              <div key={j} style={{ padding: '6px 8px', borderRight: j < specs.length - 1 ? `1.5px solid ${BR.ink}` : 'none' }}>
+                <div style={{ fontSize: 10, letterSpacing: '0.1em' }}>{k}</div>
+                <div style={{ fontSize: 13, fontWeight: 700, marginTop: 2 }}>{String(v)}</div>
               </div>
             ))}
           </div>
@@ -285,7 +285,7 @@ function GearsPage() {
         display: 'flex', alignItems: 'flex-end', gap: 40, flexWrap: 'wrap',
       }}>
         <div>
-          <div style={{ fontSize: 11, letterSpacing: '0.2em' }}>━━ GEARS / THE RIDE SYSTEM ━━━━━━━━━━━━━━━━━━</div>
+          <div style={{ fontSize: 13, letterSpacing: '0.2em' }}>━━ GEARS / THE RIDE SYSTEM ━━━━━━━━━━━━━━━━━━</div>
           <div style={{ fontSize: 'clamp(44px, 5.5vw, 72px)', fontWeight: 900, letterSpacing: '-0.05em', lineHeight: 0.95, textTransform: 'uppercase', marginTop: 8 }}>
             WHAT I RIDE.
           </div>

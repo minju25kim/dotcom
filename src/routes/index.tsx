@@ -307,7 +307,7 @@ function MobileHome({ posts: _posts, monthlyPostCount, monthlyRideKm, monthlyRid
 // ── Route component ────────────────────────────────────────────
 function HomePage() {
   const data     = Route.useLoaderData()
-  const isMobile = useIsMobile()
+  const isMobile = useIsMobile(1280)
 
   return (
     <main style={{ background: BR.bg, color: BR.ink, fontFamily: BR.font, flex: 1, display: 'flex', flexDirection: 'column' }}>

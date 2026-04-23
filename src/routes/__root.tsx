@@ -181,7 +181,7 @@ function RootLayout() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100svh', background: BR.bg }}>
       <style>{`
-        @media (max-width: 1023px) {
+        @media (max-width: 1279px) {
           .nav-location { display: none !important; }
           .nav-links { display: none !important; }
           .br-nav { padding: 10px 16px !important; gap: 8px !important; }
@@ -192,7 +192,7 @@ function RootLayout() {
           .br-footer-copy { font-size: 11px !important; }
           .br-footer-socials { gap: 10px !important; font-size: 11px !important; }
         }
-        @media (min-width: 1024px) {
+        @media (min-width: 1280px) {
           .nav-spacer { display: none !important; }
           .mobile-menu-btn { display: none !important; }
         }

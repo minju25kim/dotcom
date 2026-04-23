@@ -251,7 +251,7 @@ function ManagePage() {
       )}
 
       <style>{`
-        @media (max-width: 1023px) {
+        @media (max-width: 1279px) {
           .manage-row-header { display: none !important; }
           .manage-row {
             grid-template-columns: 50px 1fr 50px 60px !important;
