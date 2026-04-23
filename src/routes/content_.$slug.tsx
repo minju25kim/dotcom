@@ -2,6 +2,7 @@ import { createFileRoute, Link, notFound } from '@tanstack/react-router'
 import { supabase } from '../lib/supabase'
 import { MarkdownRenderer } from '../components/MarkdownRenderer'
 import { useAuth } from '../context/AuthContext'
+import { BrNotFound } from '../components/BrNotFound'
 import type { ContentPost } from './content'
 
 async function fetchPost(slug: string): Promise<ContentPost> {
@@ -19,7 +20,7 @@ export const Route = createFileRoute('/content_/$slug')({
   loader: ({ params }) => fetchPost(params.slug),
   staleTime: 60_000,
   component: ContentPostPage,
-  notFoundComponent: () => <p>Post not found.</p>,
+  notFoundComponent: () => <BrNotFound label="POST" backTo="/content" backLabel="ALL POSTS" />,
 })
 
 function ContentPostPage() {

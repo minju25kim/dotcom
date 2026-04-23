@@ -1,6 +1,7 @@
 import { createFileRoute, redirect, notFound, useNavigate } from '@tanstack/react-router'
 import { supabase } from '../lib/supabase'
 import { EditorForm } from '../components/EditorForm'
+import { BrNotFound } from '../components/BrNotFound'
 import type { ContentPost } from './content'
 
 const ADMIN_GITHUB_USERNAME = 'minju25kim'
@@ -21,7 +22,7 @@ export const Route = createFileRoute('/content_/edit/$slug')({
     return data as ContentPost & { type: string; published: boolean }
   },
   component: EditPostPage,
-  notFoundComponent: () => <p>Post not found.</p>,
+  notFoundComponent: () => <BrNotFound label="POST" backTo="/content" backLabel="ALL POSTS" />,
 })
 
 function EditPostPage() {
