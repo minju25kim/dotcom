@@ -5,19 +5,27 @@ import { useAuth } from '../context/AuthContext'
 import { BrNotFound } from '../components/BrNotFound'
 import type { ContentPost } from './content'
 
-async function fetchPost(slug: string): Promise<ContentPost> {
-  const { data, error } = await supabase
+const ADMIN_GITHUB_USERNAME = 'minju25kim'
+
+async function fetchPost(slug: string, isAdmin: boolean): Promise<ContentPost> {
+  let query = supabase
     .from('content')
     .select('id, type, title, slug, markdown, created_at, updated_at')
     .eq('slug', slug)
-    .single()
+
+  if (!isAdmin) query = query.eq('published', true)
+
+  const { data, error } = await query.single()
 
   if (error || !data) throw notFound()
   return data
 }
 
 export const Route = createFileRoute('/content_/$slug')({
-  loader: ({ params }) => fetchPost(params.slug),
+  loader: ({ params, context }) => {
+    const isAdmin = context.session?.user?.user_metadata?.user_name === ADMIN_GITHUB_USERNAME
+    return fetchPost(params.slug, isAdmin)
+  },
   staleTime: 60_000,
   component: ContentPostPage,
   notFoundComponent: () => <BrNotFound label="POST" backTo="/content" backLabel="ALL POSTS" />,
@@ -44,12 +52,20 @@ function ContentPostPage() {
             ← Content
           </Link>
           {isAdmin && (
-            <a
-              href={`/content/edit/${post.slug}`}
-              style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', color: BR.hot, border: `2px solid ${BR.hot}`, padding: '3px 10px' }}
-            >
-              EDIT
-            </a>
+            <div style={{ display: 'flex', gap: 8 }}>
+              <a
+                href="/content/manage"
+                style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', color: BR.ink, border: `2px solid ${BR.ink}`, padding: '3px 10px', textDecoration: 'none' }}
+              >
+                ALL
+              </a>
+              <a
+                href={`/content/edit/${post.slug}`}
+                style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', color: BR.hot, border: `2px solid ${BR.hot}`, padding: '3px 10px', textDecoration: 'none' }}
+              >
+                EDIT
+              </a>
+            </div>
           )}
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 10 }}>

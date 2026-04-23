@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { useState } from 'react'
 import { supabase } from '../lib/supabase'
+import { useAuth } from '../context/AuthContext'
 
 export type ContentPostSummary = {
   id: string
@@ -84,6 +85,7 @@ function CategoryBadge({ cat, inverted = false }: { cat: string; inverted?: bool
 
 function ContentPage() {
   const initial = Route.useLoaderData()
+  const { isAdmin } = useAuth()
   const [posts, setPosts] = useState(initial)
   const [loading, setLoading] = useState(false)
   const [hasMore, setHasMore] = useState(initial.length === PAGE_SIZE)
@@ -126,8 +128,18 @@ function ContentPage() {
     }}>
       {/* Page header */}
       <div style={{ padding: '22px 28px 18px', borderBottom: `3px solid ${BR.ink}` }}>
-        <div style={{ fontSize: 11, letterSpacing: '0.2em' }}>
-          ━━ CONTENT / {posts.length} POSTS ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+          <div style={{ fontSize: 11, letterSpacing: '0.2em' }}>
+            ━━ CONTENT / {posts.length} POSTS ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+          </div>
+          {isAdmin && (
+            <a
+              href="/content/manage"
+              style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', color: BR.hot, border: `2px solid ${BR.hot}`, padding: '2px 8px', textDecoration: 'none', flexShrink: 0 }}
+            >
+              MANAGE
+            </a>
+          )}
         </div>
         <div style={{
           fontSize: 'clamp(48px, 6vw, 96px)',
