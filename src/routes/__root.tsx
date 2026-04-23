@@ -205,6 +205,44 @@ function RootLayout() {
   )
 }
 
+function NotFoundPage() {
+  return (
+    <main style={{
+      flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center',
+      padding: '0 28px 64px', fontFamily: BR.font, color: BR.ink, background: BR.bg,
+    }}>
+      <div style={{ fontSize: 11, letterSpacing: '0.18em', opacity: 0.5, marginBottom: 16 }}>
+        ERROR / 404
+      </div>
+      <div style={{
+        fontSize: 'clamp(72px, 12vw, 160px)', fontWeight: 900,
+        letterSpacing: '-0.05em', lineHeight: 0.9, textTransform: 'uppercase',
+        marginBottom: 24,
+      }}>
+        NOT<br />
+        <span style={{ background: BR.hot, color: 'white', padding: '0 8px', marginLeft: -8 }}>FOUND</span>
+      </div>
+      <div style={{ fontSize: 14, opacity: 0.6, marginBottom: 32 }}>
+        This page doesn't exist or was moved.
+      </div>
+      <div>
+        <a
+          href="/"
+          style={{
+            display: 'inline-block', padding: '10px 24px',
+            background: BR.ink, color: BR.bg,
+            fontFamily: BR.font, fontSize: 12, fontWeight: 700,
+            letterSpacing: '0.1em',
+          }}
+        >
+          ← BACK HOME
+        </a>
+      </div>
+    </main>
+  )
+}
+
 export const Route = createRootRouteWithContext<RouterContext>()({
   component: RootLayout,
+  notFoundComponent: NotFoundPage,
 })
