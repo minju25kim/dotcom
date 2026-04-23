@@ -40,6 +40,7 @@ html, body {
   background: var(--br-bg);
   font-family: "JetBrains Mono", ui-monospace, Menlo, monospace;
   color: var(--br-ink);
+  overflow-x: hidden;
 }
 
 * { box-sizing: border-box; }

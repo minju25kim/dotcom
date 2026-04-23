@@ -25,95 +25,116 @@ const NAV_ITEMS = [
 ] as const
 
 function BrNav({ dark, onToggle }: { dark: boolean; onToggle: () => void }) {
+  const [menuOpen, setMenuOpen] = useState(false)
+
   return (
-    <nav style={{
-      borderBottom: `3px solid ${BR.ink}`,
-      display: 'flex',
-      alignItems: 'center',
-      gap: 20,
-      fontSize: 13,
-      background: BR.bg,
-      fontFamily: BR.font,
-      flexShrink: 0,
-      padding: '14px 28px',
-    }} className="br-nav">
-      <Link to="/" style={{ fontWeight: 900, fontSize: 16, letterSpacing: '-0.02em', color: BR.ink }}>
-        [mk]
-      </Link>
-      <div style={{ flex: 1, fontSize: 12, opacity: 0.6 }} className="nav-location">
-        MINJU KIM / SOFTWARE ENGINEER / SEOUL, KR
-      </div>
-      {/* Mobile-only spacer — pushes AVAILABLE to right when nav-location is hidden */}
-      <div className="nav-spacer" style={{ flex: 1 }} />
-      <div className="nav-links" style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
-        {NAV_ITEMS.map((item) => (
-          <Link
-            key={item.label}
-            to={item.to}
-            activeProps={{
-              style: {
-                padding: '4px 10px',
-                fontSize: 13,
-                background: BR.ink,
-                color: BR.bg,
-                textDecoration: 'none',
-                fontFamily: BR.font,
-              },
-            }}
-            inactiveProps={{
-              style: {
-                padding: '4px 10px',
-                fontSize: 13,
-                textDecoration: 'underline',
-                textUnderlineOffset: '3px',
-                color: BR.ink,
-                fontFamily: BR.font,
-              },
+    <>
+      <nav style={{
+        borderBottom: `3px solid ${BR.ink}`,
+        display: 'flex',
+        alignItems: 'center',
+        gap: 20,
+        fontSize: 13,
+        background: BR.bg,
+        fontFamily: BR.font,
+        flexShrink: 0,
+        padding: '14px 28px',
+      }} className="br-nav">
+        <Link to="/" style={{ fontWeight: 900, fontSize: 16, letterSpacing: '-0.02em', color: BR.ink }} onClick={() => setMenuOpen(false)}>
+          [mk]
+        </Link>
+        <div style={{ flex: 1, fontSize: 12, opacity: 0.6 }} className="nav-location">
+          MINJU KIM / SOFTWARE ENGINEER / SEOUL, KR
+        </div>
+        {/* Mobile-only spacer */}
+        <div className="nav-spacer" style={{ flex: 1 }} />
+        <div className="nav-links" style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
+          {NAV_ITEMS.map((item) => (
+            <Link
+              key={item.label}
+              to={item.to}
+              activeProps={{
+                style: { padding: '4px 10px', fontSize: 13, background: BR.ink, color: BR.bg, textDecoration: 'none', fontFamily: BR.font },
+              }}
+              inactiveProps={{
+                style: { padding: '4px 10px', fontSize: 13, textDecoration: 'underline', textUnderlineOffset: '3px', color: BR.ink, fontFamily: BR.font },
+              }}
+            >
+              {item.label}
+            </Link>
+          ))}
+          <button
+            onClick={onToggle}
+            title={dark ? 'Switch to light' : 'Switch to dark'}
+            style={{
+              border: `2px solid ${BR.ink}`, background: 'transparent', color: BR.ink,
+              padding: '3px 8px', fontSize: 12, fontWeight: 700, cursor: 'pointer',
+              fontFamily: BR.font, flexShrink: 0, letterSpacing: '0.05em',
             }}
           >
-            {item.label}
-          </Link>
-        ))}
-        {/* Theme toggle */}
+            {dark ? '◑ LIGHT' : '◐ DARK'}
+          </button>
+        </div>
+        {/* Mobile hamburger — hidden on desktop via CSS */}
         <button
-          onClick={onToggle}
-          title={dark ? 'Switch to light' : 'Switch to dark'}
+          className="mobile-menu-btn"
+          onClick={() => setMenuOpen(o => !o)}
           style={{
-            border: `2px solid ${BR.ink}`,
-            background: 'transparent',
-            color: BR.ink,
-            padding: '3px 8px',
-            fontSize: 12,
-            fontWeight: 700,
-            cursor: 'pointer',
-            fontFamily: BR.font,
-            flexShrink: 0,
-            letterSpacing: '0.05em',
+            border: `2px solid ${BR.ink}`, background: 'transparent', color: BR.ink,
+            padding: '3px 8px', fontSize: 13, fontWeight: 700, cursor: 'pointer',
+            fontFamily: BR.font, letterSpacing: '0.05em', display: 'none',
           }}
         >
-          {dark ? '◑ LIGHT' : '◐ DARK'}
+          {menuOpen ? '✕' : '☰'}
         </button>
-      </div>
-      <a
-        href={`mailto:${BR.email}`}
-        style={{
-          padding: '4px 10px',
-          background: BR.hot,
-          color: 'white',
-          fontWeight: 700,
-          fontSize: 13,
-          flexShrink: 0,
-        }}
-      >
-        ● AVAILABLE
-      </a>
-    </nav>
+        <a
+          href={`mailto:${BR.email}`}
+          style={{ padding: '4px 10px', background: BR.hot, color: 'white', fontWeight: 700, fontSize: 13, flexShrink: 0 }}
+        >
+          ● AVAILABLE
+        </a>
+      </nav>
+
+      {/* Mobile nav panel */}
+      {menuOpen && (
+        <div className="mobile-nav-panel" style={{
+          background: BR.bg,
+          borderBottom: `3px solid ${BR.ink}`,
+          fontFamily: BR.font,
+          display: 'none',
+        }}>
+          {NAV_ITEMS.map((item) => (
+            <Link
+              key={item.label}
+              to={item.to}
+              onClick={() => setMenuOpen(false)}
+              activeProps={{ style: { display: 'block', padding: '14px 20px', background: BR.ink, color: BR.bg, fontWeight: 900, fontSize: 15, borderBottom: `1px solid ${BR.ink}` } }}
+              inactiveProps={{ style: { display: 'block', padding: '14px 20px', color: BR.ink, fontWeight: 700, fontSize: 15, borderBottom: `1px solid ${BR.ink}` } }}
+            >
+              {item.label}
+            </Link>
+          ))}
+          <div style={{ padding: '12px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <button
+              onClick={() => { onToggle(); setMenuOpen(false) }}
+              style={{
+                border: `2px solid ${BR.ink}`, background: 'transparent', color: BR.ink,
+                padding: '6px 14px', fontSize: 12, fontWeight: 700, cursor: 'pointer',
+                fontFamily: BR.font, letterSpacing: '0.05em',
+              }}
+            >
+              {dark ? '◑ LIGHT MODE' : '◐ DARK MODE'}
+            </button>
+          </div>
+        </div>
+      )}
+    </>
   )
 }
 
 function BrFooter() {
   return (
-    <footer style={{
+    <footer className="br-footer" style={{
       borderTop: `3px solid ${BR.ink}`,
       padding: '18px 28px',
       display: 'flex',
@@ -126,10 +147,10 @@ function BrFooter() {
       flexShrink: 0,
     }}>
       <div style={{ fontWeight: 900 }}>[mk]</div>
-      <div>© 2026 MINJU KIM</div>
+      <div className="br-footer-copy">© 2026 MINJU KIM</div>
       <div style={{ flex: 1 }} />
-      <div style={{ opacity: 0.7 }}>{BR.email}</div>
-      <div style={{ display: 'flex', gap: 14, opacity: 0.8 }}>
+      <div className="br-footer-email" style={{ opacity: 0.7 }}>{BR.email}</div>
+      <div className="br-footer-socials" style={{ display: 'flex', gap: 14, opacity: 0.8 }}>
         {[
           ['GH',     'https://github.com/minju25kim'],
           ['IG',     'https://instagram.com/minju25kim'],
@@ -159,13 +180,20 @@ function RootLayout() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100svh', background: BR.bg }}>
       <style>{`
-        @media (max-width: 768px) {
+        @media (max-width: 1023px) {
           .nav-location { display: none !important; }
           .nav-links { display: none !important; }
           .br-nav { padding: 10px 16px !important; gap: 8px !important; }
+          .mobile-menu-btn { display: block !important; }
+          .mobile-nav-panel { display: block !important; }
+          .br-footer { flex-wrap: wrap !important; padding: 12px 16px !important; gap: 8px !important; }
+          .br-footer-email { display: none !important; }
+          .br-footer-copy { font-size: 11px !important; }
+          .br-footer-socials { gap: 10px !important; font-size: 11px !important; }
         }
-        @media (min-width: 769px) {
+        @media (min-width: 1024px) {
           .nav-spacer { display: none !important; }
+          .mobile-menu-btn { display: none !important; }
         }
       `}</style>
       <BrNav dark={dark} onToggle={() => setDark(d => !d)} />

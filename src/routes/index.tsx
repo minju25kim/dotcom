@@ -13,9 +13,10 @@ const BR = {
 
 type HomeData = {
   posts:            { id: string; type: string; title: string; slug: string; created_at: string | null }[]
-  postCount:        number
+  monthlyPostCount: number
   monthlyRideKm:    number
   monthlyRideCount: number
+  monthlyRunKm:     number
 }
 
 async function fetchHomeData(): Promise<HomeData> {
@@ -23,7 +24,7 @@ async function fetchHomeData(): Promise<HomeData> {
   const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString()
   const monthEnd   = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59).toISOString()
 
-  const [postsRes, countRes, monthRes] = await Promise.all([
+  const [postsRes, monthPostRes, monthRes] = await Promise.all([
     supabase
       .from('content')
       .select('id, type, title, slug, created_at')
@@ -33,7 +34,9 @@ async function fetchHomeData(): Promise<HomeData> {
     supabase
       .from('content')
       .select('id', { count: 'exact', head: true })
-      .eq('published', true),
+      .eq('published', true)
+      .gte('created_at', monthStart)
+      .lte('created_at', monthEnd),
     supabase
       .from('strava_activities')
       .select('distance, sport_type')
@@ -41,15 +44,16 @@ async function fetchHomeData(): Promise<HomeData> {
       .lte('start_date', monthEnd),
   ])
 
-  const rides = (monthRes.data ?? []).filter(a =>
-    a.sport_type?.toLowerCase().includes('ride')
-  )
+  const activities = monthRes.data ?? []
+  const rides = activities.filter(a => a.sport_type?.toLowerCase().includes('ride'))
+  const runs  = activities.filter(a => a.sport_type?.toLowerCase().includes('run'))
 
   return {
     posts:            postsRes.data ?? [],
-    postCount:        countRes.count ?? 0,
+    monthlyPostCount: monthPostRes.count ?? 0,
     monthlyRideKm:    rides.reduce((s, a) => s + a.distance, 0) / 1000,
     monthlyRideCount: rides.length,
+    monthlyRunKm:     runs.reduce((s, a) => s + a.distance, 0) / 1000,
   }
 }
 
@@ -78,14 +82,15 @@ function formatDate(iso: string) {
 }
 
 // ── Desktop layout ─────────────────────────────────────────────
-function DesktopHome({ posts, postCount, monthlyRideKm, monthlyRideCount }: HomeData) {
-  const kmDisplay = monthlyRideKm > 0 ? monthlyRideKm.toFixed(1) : '—'
-  const marqueeText = `SHIPPING / BIKELOG · CUTTER.AI / RIDING / ${kmDisplay} KM THIS MONTH · ${monthlyRideCount} RIDES / WRITING / ${postCount} POSTS · HIRING? MINJU25KIM@GMAIL.COM /`
+function DesktopHome({ posts, monthlyPostCount, monthlyRideKm, monthlyRideCount, monthlyRunKm }: HomeData) {
+  const kmDisplay  = monthlyRideKm > 0 ? monthlyRideKm.toFixed(1) : '—'
+  const runDisplay = monthlyRunKm  > 0 ? monthlyRunKm.toFixed(1)  : '—'
+  const marqueeText = `SHIPPING / BIKELOG · CUTTER.AI / RIDING / ${kmDisplay} KM THIS MONTH · ${monthlyRideCount} RIDES / HIRING? MINJU25KIM@GMAIL.COM /`
 
   const stats: [string, string, string | null][] = [
-    [kmDisplay,          'KM / MONTH',  'var(--br-hot)'],
-    [String(postCount),  'POSTS',       null],
-    [String(monthlyRideCount || '—'), 'RIDES / MO', null],
+    [String(monthlyPostCount || '—'), 'POSTS / MO', null],
+    [kmDisplay,                       'RIDE / MO',  'var(--br-hot)'],
+    [runDisplay,                      'RUN / MO',   null],
   ]
 
   return (
@@ -217,8 +222,9 @@ function DesktopHome({ posts, postCount, monthlyRideKm, monthlyRideCount }: Home
 }
 
 // ── Mobile layout (matches M2Landing) ─────────────────────────
-function MobileHome({ posts: _posts, postCount, monthlyRideKm, monthlyRideCount }: HomeData) {
-  const kmDisplay = monthlyRideKm > 0 ? Math.round(monthlyRideKm).toString() : '—'
+function MobileHome({ posts: _posts, monthlyPostCount, monthlyRideKm, monthlyRideCount: _monthlyRideCount, monthlyRunKm }: HomeData) {
+  const kmDisplay  = monthlyRideKm > 0 ? Math.round(monthlyRideKm).toString() : '—'
+  const runDisplay = monthlyRunKm  > 0 ? Math.round(monthlyRunKm).toString()  : '—'
   const marqueeText = `SHIPPING / BIKELOG · CUTTER.AI / ${kmDisplay} KM · HIRING? MINJU25KIM@GMAIL.COM /`
 
   return (
@@ -249,9 +255,9 @@ function MobileHome({ posts: _posts, postCount, monthlyRideKm, monthlyRideCount 
       <div style={{ padding: '10px 16px 4px', fontSize: 10, letterSpacing: '0.18em' }}>━ PROOF / 02 ━━━━━━━━━</div>
       <div style={{ margin: '8px 16px', border: `2.5px solid ${BR.ink}`, display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)' }}>
         {([
-          [kmDisplay,             'KM/MO',  'var(--br-hot)'],
-          [String(postCount),     'POSTS',  null],
-          [String(monthlyRideCount || '—'), 'RIDES', null],
+          [String(monthlyPostCount || '—'), 'POSTS/MO', null],
+          [kmDisplay,                       'RIDE/MO',  'var(--br-hot)'],
+          [runDisplay,                      'RUN/MO',   null],
         ] as [string, string, string | null][]).map(([big, small, bg], i) => (
           <div key={i} style={{
             padding: '12px 8px',

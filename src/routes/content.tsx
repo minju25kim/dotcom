@@ -68,7 +68,7 @@ function CategoryBadge({ cat, inverted = false }: { cat: string; inverted?: bool
   return (
     <span style={{
       background: inverted ? 'white' : (isPy ? BR.hot : BR.ink),
-      color: inverted ? (isPy ? BR.hot : BR.ink) : BR.bg,
+      color: inverted ? (isPy ? BR.hot : '#0a0a0a') : BR.bg,
       textAlign: 'center',
       padding: '2px 4px',
       fontSize: 9,
@@ -239,7 +239,7 @@ function ContentPage() {
       )}
 
       <style>{`
-        @media (max-width: 768px) {
+        @media (max-width: 1023px) {
           .content-row {
             grid-template-columns: 60px 1fr 18px !important;
             gap: 8px !important;
