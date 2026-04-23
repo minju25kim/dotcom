@@ -48,11 +48,9 @@ const BR = {
   font: '"JetBrains Mono", ui-monospace, Menlo, monospace',
 }
 
-const MAINTENANCE = [
-  ['CHAIN', '420 km ago'],
-  ['TIRES', '2,100 km ago'],
-  ['BAR TAPE', '180 km ago'],
-  ['SERVICE', '03/26'],
+const WISHLIST = [
+  'SHIMANO 105 SET',
+  'BIANCHI SPRINT FRAME',
 ]
 
 function SpecsTable({ specs, compact = false }: { specs: Record<string, unknown>; compact?: boolean }) {
@@ -176,7 +174,7 @@ function MobileGears({ gears }: { gears: GearRow[] }) {
     <div style={{ flex: 1, overflow: 'auto', fontFamily: BR.font, background: BR.bg, color: BR.ink }}>
       {/* Header */}
       <div style={{ padding: '18px 16px 14px', borderBottom: `2.5px solid ${BR.ink}` }}>
-        <div style={{ fontSize: 10, letterSpacing: '0.18em' }}>━ GEARS ━━━━━━━━━━━━━</div>
+        <div style={{ fontSize: 12, letterSpacing: '0.18em' }}>━ GEARS ━━━━━━━━━━━━━</div>
         <div style={{ fontSize: 54, fontWeight: 900, letterSpacing: '-0.04em', lineHeight: 0.95, textTransform: 'uppercase', marginTop: 6 }}>
           WHAT I RIDE.
         </div>
@@ -197,13 +195,13 @@ function MobileGears({ gears }: { gears: GearRow[] }) {
                 [ PHOTO ]
               </div>
             )}
-            <div style={{ position: 'absolute', top: 10, left: 12, fontSize: 9, letterSpacing: '0.15em' }}>◎ 01 / {hero.category.toUpperCase()}</div>
+            <div style={{ position: 'absolute', top: 10, left: 12, fontSize: 12, letterSpacing: '0.15em' }}>◎ 01 / {hero.category.toUpperCase()}</div>
             {hero.brand && (
-              <div style={{ position: 'absolute', bottom: 10, left: 12, fontSize: 9, letterSpacing: '0.15em' }}>{hero.brand.toUpperCase()}</div>
+              <div style={{ position: 'absolute', bottom: 10, left: 12, fontSize: 12, letterSpacing: '0.15em' }}>{hero.brand.toUpperCase()}</div>
             )}
           </div>
           <div style={{ padding: 16, borderBottom: `2.5px solid ${BR.ink}` }}>
-            <div style={{ display: 'inline-block', border: `2px solid ${BR.ink}`, padding: '2px 8px', fontSize: 10, fontWeight: 700 }}>
+            <div style={{ display: 'inline-block', border: `2px solid ${BR.ink}`, padding: '2px 8px', fontSize: 12, fontWeight: 700 }}>
               {hero.category.toUpperCase()}
             </div>
             <div style={{ fontSize: 36, fontWeight: 900, letterSpacing: '-0.03em', lineHeight: 0.95, marginTop: 10, textTransform: 'uppercase' }}>
@@ -233,7 +231,7 @@ function MobileGears({ gears }: { gears: GearRow[] }) {
             {imageUrl && (
               <div style={{ height: 140, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', background: BR.bg, borderBottom: `1.5px solid ${BR.ink}` }}>
                 <img src={imageUrl} alt={gear.name} style={{ maxWidth: '70%', maxHeight: '80%', objectFit: 'contain' }} />
-                <div style={{ position: 'absolute', top: 8, left: 10, fontSize: 9, letterSpacing: '0.15em' }}>◎ 0{i + 2} / {gear.category.toUpperCase()}</div>
+                <div style={{ position: 'absolute', top: 8, left: 10, fontSize: 12, letterSpacing: '0.15em' }}>◎ 0{i + 2} / {gear.category.toUpperCase()}</div>
               </div>
             )}
             <div style={{ padding: '12px 16px' }}>
@@ -243,7 +241,7 @@ function MobileGears({ gears }: { gears: GearRow[] }) {
                 <div style={{ marginTop: 8, display: 'grid', gridTemplateColumns: `repeat(${topSpecs.length}, 1fr)`, border: `2px solid ${BR.ink}` }}>
                   {topSpecs.map(([k, v], j) => (
                     <div key={j} style={{ padding: '5px 6px', borderRight: j < topSpecs.length - 1 ? `1.5px solid ${BR.ink}` : 'none' }}>
-                      <div style={{ fontSize: 8, letterSpacing: '0.1em' }}>{k}</div>
+                      <div style={{ fontSize: 10, letterSpacing: '0.1em' }}>{k}</div>
                       <div style={{ fontSize: 11, fontWeight: 700, marginTop: 1 }}>{String(v)}</div>
                     </div>
                   ))}
@@ -254,20 +252,12 @@ function MobileGears({ gears }: { gears: GearRow[] }) {
         )
       })}
 
-      {/* Maintenance */}
-      <div style={{ padding: '12px 16px', borderBottom: `2.5px solid ${BR.ink}` }}>
-        <div style={{ fontSize: 10, letterSpacing: '0.18em', marginBottom: 8 }}>▼ MAINTENANCE LOG</div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 6, fontSize: 11 }}>
-          {MAINTENANCE.map(([k, v], j) => (
-            <div key={j}><b>{k}</b> · {v}</div>
-          ))}
-        </div>
-      </div>
-
       {/* Wishlist */}
       <div style={{ margin: 16, padding: '12px 14px', background: BR.hot, color: 'white' }}>
-        <div style={{ fontSize: 9, letterSpacing: '0.15em' }}>WISHLIST · NEXT</div>
-        <div style={{ fontSize: 16, fontWeight: 900, marginTop: 4 }}>CARBON ENDURANCE FRAME</div>
+        <div style={{ fontSize: 12, letterSpacing: '0.15em', marginBottom: 6 }}>WISHLIST · NEXT</div>
+        {WISHLIST.map((item, i) => (
+          <div key={i} style={{ fontSize: 16, fontWeight: 900, marginTop: 4 }}>{item}</div>
+        ))}
       </div>
     </div>
   )
@@ -302,16 +292,21 @@ function GearsPage() {
         </div>
         <div style={{ flex: 1 }} />
         <div style={{ display: 'flex', border: `3px solid ${BR.ink}` }}>
-          {[
-            [String(gears.length), 'ITEMS'],
-            ['14,200', 'KM'],
-            ['2016', 'SINCE'],
-          ].map(([v, k], i, a) => (
-            <div key={i} style={{ padding: '12px 18px', borderRight: i < a.length - 1 ? `3px solid ${BR.ink}` : 'none', textAlign: 'center' }}>
-              <div style={{ fontSize: 24, fontWeight: 900, lineHeight: 1, letterSpacing: '-0.03em' }}>{v}</div>
-              <div style={{ fontSize: 10, marginTop: 4, letterSpacing: '0.12em' }}>{k}</div>
-            </div>
-          ))}
+          {(() => {
+            const years = gears.map(g => g.model_year).filter(Boolean) as number[]
+            const since = years.length ? String(Math.min(...years)) : '—'
+            const cats = [...new Set(gears.map(g => g.category))].length
+            return [
+              [String(gears.length), 'ITEMS'],
+              [String(cats), 'CATEGORIES'],
+              [since, 'SINCE'],
+            ].map(([v, k], i, a) => (
+              <div key={i} style={{ padding: '12px 18px', borderRight: i < a.length - 1 ? `3px solid ${BR.ink}` : 'none', textAlign: 'center' }}>
+                <div style={{ fontSize: 24, fontWeight: 900, lineHeight: 1, letterSpacing: '-0.03em' }}>{v}</div>
+                <div style={{ fontSize: 10, marginTop: 4, letterSpacing: '0.12em' }}>{k}</div>
+              </div>
+            ))
+          })()}
         </div>
       </div>
 
@@ -329,20 +324,12 @@ function GearsPage() {
         </div>
       )}
 
-      {/* Maintenance + wishlist */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1.4fr 1fr', borderBottom: `3px solid ${BR.ink}`, flexShrink: 0 }}>
-        <div style={{ padding: '12px 28px', borderRight: `3px solid ${BR.ink}` }}>
-          <div style={{ fontSize: 10, letterSpacing: '0.18em', marginBottom: 6 }}>▼ MAINTENANCE LOG</div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 6, fontSize: 11 }}>
-            {MAINTENANCE.map(([k, v], j) => (
-              <div key={j}><b>{k}</b> · {v}</div>
-            ))}
-          </div>
-        </div>
-        <div style={{ padding: '12px 20px', background: BR.hot, color: 'white', display: 'flex', alignItems: 'center', gap: 12 }}>
-          <div style={{ fontSize: 10, letterSpacing: '0.15em' }}>WISHLIST · NEXT</div>
-          <div style={{ fontSize: 16, fontWeight: 900, flex: 1 }}>CARBON ENDURANCE FRAME</div>
-        </div>
+      {/* Wishlist */}
+      <div style={{ padding: '12px 20px', background: BR.hot, color: 'white', display: 'flex', alignItems: 'center', gap: 20, borderBottom: `3px solid ${BR.ink}`, flexShrink: 0 }}>
+        <div style={{ fontSize: 10, letterSpacing: '0.15em', flexShrink: 0 }}>WISHLIST · NEXT</div>
+        {WISHLIST.map((item, i) => (
+          <div key={i} style={{ fontSize: 16, fontWeight: 900 }}>{item}</div>
+        ))}
       </div>
     </main>
   )
