@@ -10,7 +10,6 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as StravaRouteImport } from './routes/strava'
-import { Route as ProjectsRouteImport } from './routes/projects'
 import { Route as GearsRouteImport } from './routes/gears'
 import { Route as ContentRouteImport } from './routes/content'
 import { Route as AdminRouteImport } from './routes/admin'
@@ -23,11 +22,6 @@ import { Route as ContentEditSlugRouteImport } from './routes/content_.edit.$slu
 const StravaRoute = StravaRouteImport.update({
   id: '/strava',
   path: '/strava',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ProjectsRoute = ProjectsRouteImport.update({
-  id: '/projects',
-  path: '/projects',
   getParentRoute: () => rootRouteImport,
 } as any)
 const GearsRoute = GearsRouteImport.update({
@@ -76,7 +70,6 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminRoute
   '/content': typeof ContentRoute
   '/gears': typeof GearsRoute
-  '/projects': typeof ProjectsRoute
   '/strava': typeof StravaRoute
   '/content/$slug': typeof ContentSlugRoute
   '/content/manage': typeof ContentManageRoute
@@ -88,7 +81,6 @@ export interface FileRoutesByTo {
   '/admin': typeof AdminRoute
   '/content': typeof ContentRoute
   '/gears': typeof GearsRoute
-  '/projects': typeof ProjectsRoute
   '/strava': typeof StravaRoute
   '/content/$slug': typeof ContentSlugRoute
   '/content/manage': typeof ContentManageRoute
@@ -101,7 +93,6 @@ export interface FileRoutesById {
   '/admin': typeof AdminRoute
   '/content': typeof ContentRoute
   '/gears': typeof GearsRoute
-  '/projects': typeof ProjectsRoute
   '/strava': typeof StravaRoute
   '/content_/$slug': typeof ContentSlugRoute
   '/content_/manage': typeof ContentManageRoute
@@ -115,7 +106,6 @@ export interface FileRouteTypes {
     | '/admin'
     | '/content'
     | '/gears'
-    | '/projects'
     | '/strava'
     | '/content/$slug'
     | '/content/manage'
@@ -127,7 +117,6 @@ export interface FileRouteTypes {
     | '/admin'
     | '/content'
     | '/gears'
-    | '/projects'
     | '/strava'
     | '/content/$slug'
     | '/content/manage'
@@ -139,7 +128,6 @@ export interface FileRouteTypes {
     | '/admin'
     | '/content'
     | '/gears'
-    | '/projects'
     | '/strava'
     | '/content_/$slug'
     | '/content_/manage'
@@ -152,7 +140,6 @@ export interface RootRouteChildren {
   AdminRoute: typeof AdminRoute
   ContentRoute: typeof ContentRoute
   GearsRoute: typeof GearsRoute
-  ProjectsRoute: typeof ProjectsRoute
   StravaRoute: typeof StravaRoute
   ContentSlugRoute: typeof ContentSlugRoute
   ContentManageRoute: typeof ContentManageRoute
@@ -167,13 +154,6 @@ declare module '@tanstack/react-router' {
       path: '/strava'
       fullPath: '/strava'
       preLoaderRoute: typeof StravaRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/projects': {
-      id: '/projects'
-      path: '/projects'
-      fullPath: '/projects'
-      preLoaderRoute: typeof ProjectsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/gears': {
@@ -240,7 +220,6 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRoute: AdminRoute,
   ContentRoute: ContentRoute,
   GearsRoute: GearsRoute,
-  ProjectsRoute: ProjectsRoute,
   StravaRoute: StravaRoute,
   ContentSlugRoute: ContentSlugRoute,
   ContentManageRoute: ContentManageRoute,

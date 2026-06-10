@@ -3,26 +3,26 @@ import { supabase } from '../lib/supabase'
 import { useIsMobile } from '../hooks/useIsMobile'
 
 const BR = {
-  bg:   'var(--br-bg)',
-  ink:  'var(--br-ink)',
-  hot:  'var(--br-hot)',
+  bg: 'var(--br-bg)',
+  ink: 'var(--br-ink)',
+  hot: 'var(--br-hot)',
   soft: 'var(--br-soft)',
   font: '"JetBrains Mono", ui-monospace, Menlo, monospace',
   email: 'minju25kim@gmail.com',
 }
 
 type HomeData = {
-  posts:            { id: string; type: string; title: string; slug: string; created_at: string | null }[]
+  posts: { id: string; type: string; title: string; slug: string; created_at: string | null }[]
   monthlyPostCount: number
-  monthlyRideKm:    number
+  monthlyRideKm: number
   monthlyRideCount: number
-  monthlyRunKm:     number
+  monthlyRunKm: number
 }
 
 async function fetchHomeData(): Promise<HomeData> {
-  const now        = new Date()
+  const now = new Date()
   const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString()
-  const monthEnd   = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59).toISOString()
+  const monthEnd = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59).toISOString()
 
   const [postsRes, monthPostRes, monthRes] = await Promise.all([
     supabase
@@ -46,14 +46,14 @@ async function fetchHomeData(): Promise<HomeData> {
 
   const activities = monthRes.data ?? []
   const rides = activities.filter(a => a.sport_type?.toLowerCase().includes('ride'))
-  const runs  = activities.filter(a => a.sport_type?.toLowerCase().includes('run'))
+  const runs = activities.filter(a => a.sport_type?.toLowerCase().includes('run'))
 
   return {
-    posts:            postsRes.data ?? [],
+    posts: postsRes.data ?? [],
     monthlyPostCount: monthPostRes.count ?? 0,
-    monthlyRideKm:    rides.reduce((s, a) => s + a.distance, 0) / 1000,
+    monthlyRideKm: rides.reduce((s, a) => s + a.distance, 0) / 1000,
     monthlyRideCount: rides.length,
-    monthlyRunKm:     runs.reduce((s, a) => s + a.distance, 0) / 1000,
+    monthlyRunKm: runs.reduce((s, a) => s + a.distance, 0) / 1000,
   }
 }
 
@@ -65,32 +65,32 @@ export const Route = createFileRoute('/')({
 
 // ── shared data ────────────────────────────────────────────────
 const SOCIALS: [string, string][] = [
-  ['GITHUB',    'https://github.com/minju25kim'],
+  ['GITHUB', 'https://github.com/minju25kim'],
   ['INSTAGRAM', 'https://instagram.com/minju25kim'],
-  ['YOUTUBE',   'https://youtube.com/@minju25kim'],
-  ['STRAVA',    'https://strava.com/athletes/minju25kim'],
+  ['YOUTUBE', 'https://youtube.com/@minju25kim'],
+  ['STRAVA', 'https://strava.com/athletes/minju25kim'],
 ]
 
 const PROJECTS = [
-  { n: '01', name: 'BIKELOG',    shortDesc: 'Smarter ride journal. TS · Mapbox.',         longDesc: 'A smarter ride journal. GPX, mapbox, strava webhooks.', stack: 'TYPESCRIPT', status: 'IN PROGRESS' },
-  { n: '02', name: 'CUTTER.AI', shortDesc: 'Video editing via transcript. Py.',           longDesc: 'Edit video at the speed of thought. Whisper + ffmpeg.',  stack: 'PYTHON',     status: 'PROTOTYPE'  },
+  { n: '01', name: 'BIKELOG', shortDesc: 'Smarter ride journal. TS · Mapbox.', longDesc: 'A smarter ride journal. GPX, mapbox, strava webhooks.', stack: 'TYPESCRIPT', status: 'IN PROGRESS' },
+  { n: '02', name: 'CUTTER.AI', shortDesc: 'Video editing via transcript. Py.', longDesc: 'Edit video at the speed of thought. Whisper + ffmpeg.', stack: 'PYTHON', status: 'PROTOTYPE' },
 ]
 
 function formatDate(iso: string) {
   const d = new Date(iso)
-  return `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getFullYear()).slice(2)}`
+  return `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}/${String(d.getFullYear()).slice(2)}`
 }
 
 // ── Desktop layout ─────────────────────────────────────────────
 function DesktopHome({ posts, monthlyPostCount, monthlyRideKm, monthlyRideCount, monthlyRunKm }: HomeData) {
-  const kmDisplay  = monthlyRideKm > 0 ? monthlyRideKm.toFixed(1) : '—'
-  const runDisplay = monthlyRunKm  > 0 ? monthlyRunKm.toFixed(1)  : '—'
-  const marqueeText = `SHIPPING / BIKELOG · CUTTER.AI / RIDING / ${kmDisplay} KM THIS MONTH · ${monthlyRideCount} RIDES / HIRING? MINJU25KIM@GMAIL.COM /`
+  const kmDisplay = monthlyRideKm > 0 ? monthlyRideKm.toFixed(1) : '—'
+  const runDisplay = monthlyRunKm > 0 ? monthlyRunKm.toFixed(1) : '—'
+  const marqueeText = `RIDING / ${kmDisplay} KM THIS MONTH · ${monthlyRideCount} RIDES / HIRING? MINJU25KIM@GMAIL.COM /`
 
   const stats: [string, string, string | null][] = [
     [String(monthlyPostCount || '—'), 'POSTS / MO', null],
-    [kmDisplay,                       'RIDE / MO',  'var(--br-hot)'],
-    [runDisplay,                      'RUN / MO',   null],
+    [kmDisplay, 'RIDE / MO', 'var(--br-hot)'],
+    [runDisplay, 'RUN / MO', null],
   ]
 
   return (
@@ -112,14 +112,12 @@ function DesktopHome({ posts, monthlyPostCount, monthlyRideKm, monthlyRideCount,
         </div>
 
         <div style={{ fontSize: 14, lineHeight: 1.55, maxWidth: 520 }}>
-          Software engineer in Seoul. I ride 600+ km a month and ship code for
-          the other 22 hours. Currently building <b>bikelog</b> (a smarter Strava)
-          and <b>cutter.ai</b> (video editing at the speed of thought).
+          Software engineer(wannabe) in Seoul.
         </div>
 
         <div style={{ display: 'flex', border: `3px solid ${BR.ink}` }}>
-          <a href="/projects" style={{ padding: '12px 16px', background: BR.ink, color: BR.bg, fontWeight: 700, fontSize: 13 }}>
-            → SEE THE WORK
+          <a href={`mailto:${BR.email}`} style={{ padding: '12px 16px', background: BR.ink, color: BR.bg, fontWeight: 700, fontSize: 13 }}>
+            → CONTACT
           </a>
           <a href={`mailto:${BR.email}`} style={{ padding: '12px 16px', borderLeft: `3px solid ${BR.ink}`, fontSize: 13, color: BR.ink }}>
             {BR.email} ↗
@@ -165,7 +163,7 @@ function DesktopHome({ posts, monthlyPostCount, monthlyRideKm, monthlyRideCount,
         </div>
 
         {/* Projects */}
-        <div style={{ padding: '20px 28px', borderBottom: `3px solid ${BR.ink}` }}>
+        {/* <div style={{ padding: '20px 28px', borderBottom: `3px solid ${BR.ink}` }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 10, fontSize: 11, letterSpacing: '0.15em' }}>
             <span>▼ PROJECTS (2)</span>
           </div>
@@ -180,7 +178,7 @@ function DesktopHome({ posts, monthlyPostCount, monthlyRideKm, monthlyRideCount,
               <div style={{ fontSize: 11, background: BR.ink, color: BR.bg, padding: '4px 8px', textAlign: 'center', justifySelf: 'end' }}>{p.status}</div>
             </div>
           ))}
-        </div>
+        </div> */}
 
         {/* Content ledger */}
         <div style={{ padding: '20px 28px', flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
@@ -223,9 +221,9 @@ function DesktopHome({ posts, monthlyPostCount, monthlyRideKm, monthlyRideCount,
 
 // ── Mobile layout (matches M2Landing) ─────────────────────────
 function MobileHome({ posts: _posts, monthlyPostCount, monthlyRideKm, monthlyRideCount: _monthlyRideCount, monthlyRunKm }: HomeData) {
-  const kmDisplay  = monthlyRideKm > 0 ? Math.round(monthlyRideKm).toString() : '—'
-  const runDisplay = monthlyRunKm  > 0 ? Math.round(monthlyRunKm).toString()  : '—'
-  const marqueeText = `SHIPPING / BIKELOG · CUTTER.AI / ${kmDisplay} KM · HIRING? MINJU25KIM@GMAIL.COM /`
+  const kmDisplay = monthlyRideKm > 0 ? Math.round(monthlyRideKm).toString() : '—'
+  const runDisplay = monthlyRunKm > 0 ? Math.round(monthlyRunKm).toString() : '—'
+  const marqueeText = `RIDING / ${kmDisplay} KM THIS MONTH · HIRING? MINJU25KIM@GMAIL.COM`
 
   return (
     <div style={{ flex: 1, overflow: 'auto', fontFamily: BR.font, background: BR.bg, color: BR.ink }}>
@@ -238,16 +236,19 @@ function MobileHome({ posts: _posts, monthlyPostCount, monthlyRideKm, monthlyRid
           THAT <span style={{ color: BR.hot }}>MOVE</span>.
         </div>
         <div style={{ fontSize: 12, lineHeight: 1.55, marginTop: 12 }}>
-          Software engineer in Seoul. Ride 600+ km a month, ship code for the other 22 hours.
-          Currently on <b>bikelog</b> + <b>cutter.ai</b>.
+          Software engineer(wannabe) in Seoul.
         </div>
         <div style={{ display: 'flex', border: `2.5px solid ${BR.ink}`, marginTop: 14 }}>
-          <a href="/projects" style={{ padding: '10px 12px', background: BR.ink, color: BR.bg, fontWeight: 700, fontSize: 12, flex: 1, textAlign: 'center' }}>
-            → THE WORK
+
+
+          <a href={`mailto:${BR.email}`} style={{ padding: '10px 12px', background: BR.ink, color: BR.bg, fontWeight: 700, fontSize: 12, flex: 1, textAlign: 'center' }}>
+            → CONTACT
           </a>
           <a href={`mailto:${BR.email}`} style={{ padding: '10px 12px', borderLeft: `2.5px solid ${BR.ink}`, fontSize: 12, flex: 1, textAlign: 'center', color: BR.ink }}>
-            email ↗
+            {BR.email} ↗
           </a>
+
+
         </div>
       </div>
 
@@ -256,8 +257,8 @@ function MobileHome({ posts: _posts, monthlyPostCount, monthlyRideKm, monthlyRid
       <div style={{ margin: '8px 16px', border: `2.5px solid ${BR.ink}`, display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)' }}>
         {([
           [String(monthlyPostCount || '—'), 'POSTS/MO', null],
-          [kmDisplay,                       'RIDE/MO',  'var(--br-hot)'],
-          [runDisplay,                      'RUN/MO',   null],
+          [kmDisplay, 'RIDE/MO', 'var(--br-hot)'],
+          [runDisplay, 'RUN/MO', null],
         ] as [string, string, string | null][]).map(([big, small, bg], i) => (
           <div key={i} style={{
             padding: '12px 8px',
@@ -279,7 +280,7 @@ function MobileHome({ posts: _posts, monthlyPostCount, monthlyRideKm, monthlyRid
       </div>
 
       {/* NOW — projects */}
-      <div style={{ padding: '14px 16px 4px', fontSize: 10, letterSpacing: '0.18em' }}>━ NOW / 03 ━━━━━━━━━━━</div>
+      {/* <div style={{ padding: '14px 16px 4px', fontSize: 10, letterSpacing: '0.18em' }}>━ NOW / 03 ━━━━━━━━━━━</div>
       {PROJECTS.map((p, i) => (
         <div key={i} style={{ display: 'grid', gridTemplateColumns: '32px 1fr auto', gap: 8, padding: '10px 16px', borderTop: `1px solid ${BR.ink}`, alignItems: 'baseline' }}>
           <div style={{ fontSize: 18, fontWeight: 900 }}>{p.n}</div>
@@ -289,10 +290,10 @@ function MobileHome({ posts: _posts, monthlyPostCount, monthlyRideKm, monthlyRid
           </div>
           <span style={{ fontSize: 14 }}>↗</span>
         </div>
-      ))}
+      ))} */}
 
       {/* FIND — socials */}
-      <div style={{ padding: '14px 16px 4px', fontSize: 10, letterSpacing: '0.18em' }}>━ FIND / 04 ━━━━━━━━━━</div>
+      <div style={{ padding: '14px 16px 4px', fontSize: 10, letterSpacing: '0.18em' }}>━ FIND / 03 ━━━━━━━━━━</div>
       <div style={{ padding: '4px 16px 20px', display: 'flex', flexWrap: 'wrap', gap: 4 }}>
         {SOCIALS.map(([k, url]) => (
           <a key={k} href={url} target="_blank" rel="noopener noreferrer" style={{ border: `2px solid ${BR.ink}`, padding: '5px 8px', fontSize: 10, color: BR.ink }}>
@@ -306,7 +307,7 @@ function MobileHome({ posts: _posts, monthlyPostCount, monthlyRideKm, monthlyRid
 
 // ── Route component ────────────────────────────────────────────
 function HomePage() {
-  const data     = Route.useLoaderData()
+  const data = Route.useLoaderData()
   const isMobile = useIsMobile(1280)
 
   return (

@@ -291,7 +291,7 @@ function GearsPage() {
           </div>
         </div>
         <div style={{ flex: 1 }} />
-        <div style={{ display: 'flex', border: `3px solid ${BR.ink}` }}>
+        {/* <div style={{ display: 'flex', border: `3px solid ${BR.ink}` }}>
           {(() => {
             const years = gears.map(g => g.model_year).filter(Boolean) as number[]
             const since = years.length ? String(Math.min(...years)) : '—'
@@ -307,7 +307,7 @@ function GearsPage() {
               </div>
             ))
           })()}
-        </div>
+        </div> */}
       </div>
 
       {hero && <HeroGear gear={hero} />}
