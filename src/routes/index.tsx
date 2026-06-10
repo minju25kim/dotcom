@@ -71,10 +71,10 @@ const SOCIALS: [string, string][] = [
   ['STRAVA', 'https://strava.com/athletes/minju25kim'],
 ]
 
-const PROJECTS = [
-  { n: '01', name: 'BIKELOG', shortDesc: 'Smarter ride journal. TS · Mapbox.', longDesc: 'A smarter ride journal. GPX, mapbox, strava webhooks.', stack: 'TYPESCRIPT', status: 'IN PROGRESS' },
-  { n: '02', name: 'CUTTER.AI', shortDesc: 'Video editing via transcript. Py.', longDesc: 'Edit video at the speed of thought. Whisper + ffmpeg.', stack: 'PYTHON', status: 'PROTOTYPE' },
-]
+// const PROJECTS = [
+//   { n: '01', name: 'BIKELOG', shortDesc: 'Smarter ride journal. TS · Mapbox.', longDesc: 'A smarter ride journal. GPX, mapbox, strava webhooks.', stack: 'TYPESCRIPT', status: 'IN PROGRESS' },
+//   { n: '02', name: 'CUTTER.AI', shortDesc: 'Video editing via transcript. Py.', longDesc: 'Edit video at the speed of thought. Whisper + ffmpeg.', stack: 'PYTHON', status: 'PROTOTYPE' },
+// ]
 
 function formatDate(iso: string) {
   const d = new Date(iso)
