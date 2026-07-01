@@ -21,7 +21,6 @@ const BR = {
 const NAV_ITEMS = [
   // { label: 'Projects', to: '/projects' },
   { label: 'Gears',    to: '/gears'    },
-  { label: 'Strava',   to: '/strava'   },
   { label: 'Content',  to: '/content'  },
 ] as const
 

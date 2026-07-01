@@ -14,9 +14,9 @@ const BR = {
 type HomeData = {
   posts: { id: string; type: string; title: string; slug: string; created_at: string | null }[]
   monthlyPostCount: number
-  monthlyRideKm: number
-  monthlyRideCount: number
-  monthlyRunKm: number
+  // monthlyRideKm: number
+  // monthlyRideCount: number
+  // monthlyRunKm: number
 }
 
 async function fetchHomeData(): Promise<HomeData> {
@@ -24,7 +24,7 @@ async function fetchHomeData(): Promise<HomeData> {
   const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString()
   const monthEnd = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59).toISOString()
 
-  const [postsRes, monthPostRes, monthRes] = await Promise.all([
+  const [postsRes, monthPostRes] = await Promise.all([
     supabase
       .from('content')
       .select('id, type, title, slug, created_at')
@@ -37,23 +37,11 @@ async function fetchHomeData(): Promise<HomeData> {
       .eq('published', true)
       .gte('created_at', monthStart)
       .lte('created_at', monthEnd),
-    supabase
-      .from('strava_activities')
-      .select('distance, sport_type')
-      .gte('start_date', monthStart)
-      .lte('start_date', monthEnd),
   ])
-
-  const activities = monthRes.data ?? []
-  const rides = activities.filter(a => a.sport_type?.toLowerCase().includes('ride'))
-  const runs = activities.filter(a => a.sport_type?.toLowerCase().includes('run'))
 
   return {
     posts: postsRes.data ?? [],
     monthlyPostCount: monthPostRes.count ?? 0,
-    monthlyRideKm: rides.reduce((s, a) => s + a.distance, 0) / 1000,
-    monthlyRideCount: rides.length,
-    monthlyRunKm: runs.reduce((s, a) => s + a.distance, 0) / 1000,
   }
 }
 
@@ -71,10 +59,6 @@ const SOCIALS: [string, string][] = [
   ['STRAVA', 'https://strava.com/athletes/minju25kim'],
 ]
 
-// const PROJECTS = [
-//   { n: '01', name: 'BIKELOG', shortDesc: 'Smarter ride journal. TS · Mapbox.', longDesc: 'A smarter ride journal. GPX, mapbox, strava webhooks.', stack: 'TYPESCRIPT', status: 'IN PROGRESS' },
-//   { n: '02', name: 'CUTTER.AI', shortDesc: 'Video editing via transcript. Py.', longDesc: 'Edit video at the speed of thought. Whisper + ffmpeg.', stack: 'PYTHON', status: 'PROTOTYPE' },
-// ]
 
 function formatDate(iso: string) {
   const d = new Date(iso)
@@ -82,15 +66,15 @@ function formatDate(iso: string) {
 }
 
 // ── Desktop layout ─────────────────────────────────────────────
-function DesktopHome({ posts, monthlyPostCount, monthlyRideKm, monthlyRideCount, monthlyRunKm }: HomeData) {
-  const kmDisplay = monthlyRideKm > 0 ? monthlyRideKm.toFixed(1) : '—'
-  const runDisplay = monthlyRunKm > 0 ? monthlyRunKm.toFixed(1) : '—'
-  const marqueeText = `RIDING / ${kmDisplay} KM THIS MONTH · ${monthlyRideCount} RIDES / HIRING? MINJU25KIM@GMAIL.COM /`
+function DesktopHome({ posts, monthlyPostCount}: HomeData) {
+  // const kmDisplay = monthlyRideKm > 0 ? monthlyRideKm.toFixed(1) : '—'
+  // const runDisplay = monthlyRunKm > 0 ? monthlyRunKm.toFixed(1) : '—'
+  const marqueeText = `HIRING? MINJU25KIM@GMAIL.COM /`
 
   const stats: [string, string, string | null][] = [
     [String(monthlyPostCount || '—'), 'POSTS / MO', null],
-    [kmDisplay, 'RIDE / MO', 'var(--br-hot)'],
-    [runDisplay, 'RUN / MO', null],
+    // [kmDisplay, 'RIDE / MO', 'var(--br-hot)'],
+    // [runDisplay, 'RUN / MO', null],
   ]
 
   return (
@@ -220,10 +204,8 @@ function DesktopHome({ posts, monthlyPostCount, monthlyRideKm, monthlyRideCount,
 }
 
 // ── Mobile layout (matches M2Landing) ─────────────────────────
-function MobileHome({ posts: _posts, monthlyPostCount, monthlyRideKm, monthlyRideCount: _monthlyRideCount, monthlyRunKm }: HomeData) {
-  const kmDisplay = monthlyRideKm > 0 ? Math.round(monthlyRideKm).toString() : '—'
-  const runDisplay = monthlyRunKm > 0 ? Math.round(monthlyRunKm).toString() : '—'
-  const marqueeText = `RIDING / ${kmDisplay} KM THIS MONTH · HIRING? MINJU25KIM@GMAIL.COM`
+function MobileHome({ posts: _posts, monthlyPostCount }: HomeData) {
+  const marqueeText = `HIRING? MINJU25KIM@GMAIL.COM`
 
   return (
     <div style={{ flex: 1, overflow: 'auto', fontFamily: BR.font, background: BR.bg, color: BR.ink }}>
@@ -257,8 +239,8 @@ function MobileHome({ posts: _posts, monthlyPostCount, monthlyRideKm, monthlyRid
       <div style={{ margin: '8px 16px', border: `2.5px solid ${BR.ink}`, display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)' }}>
         {([
           [String(monthlyPostCount || '—'), 'POSTS/MO', null],
-          [kmDisplay, 'RIDE/MO', 'var(--br-hot)'],
-          [runDisplay, 'RUN/MO', null],
+          // [kmDisplay, 'RIDE/MO', 'var(--br-hot)'],
+          // [runDisplay, 'RUN/MO', null],
         ] as [string, string, string | null][]).map(([big, small, bg], i) => (
           <div key={i} style={{
             padding: '12px 8px',

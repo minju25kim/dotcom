@@ -9,7 +9,6 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as StravaRouteImport } from './routes/strava'
 import { Route as GearsRouteImport } from './routes/gears'
 import { Route as ContentRouteImport } from './routes/content'
 import { Route as AdminRouteImport } from './routes/admin'
@@ -19,11 +18,6 @@ import { Route as ContentManageRouteImport } from './routes/content_.manage'
 import { Route as ContentSlugRouteImport } from './routes/content_.$slug'
 import { Route as ContentEditSlugRouteImport } from './routes/content_.edit.$slug'
 
-const StravaRoute = StravaRouteImport.update({
-  id: '/strava',
-  path: '/strava',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const GearsRoute = GearsRouteImport.update({
   id: '/gears',
   path: '/gears',
@@ -70,7 +64,6 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminRoute
   '/content': typeof ContentRoute
   '/gears': typeof GearsRoute
-  '/strava': typeof StravaRoute
   '/content/$slug': typeof ContentSlugRoute
   '/content/manage': typeof ContentManageRoute
   '/content/new': typeof ContentNewRoute
@@ -81,7 +74,6 @@ export interface FileRoutesByTo {
   '/admin': typeof AdminRoute
   '/content': typeof ContentRoute
   '/gears': typeof GearsRoute
-  '/strava': typeof StravaRoute
   '/content/$slug': typeof ContentSlugRoute
   '/content/manage': typeof ContentManageRoute
   '/content/new': typeof ContentNewRoute
@@ -93,7 +85,6 @@ export interface FileRoutesById {
   '/admin': typeof AdminRoute
   '/content': typeof ContentRoute
   '/gears': typeof GearsRoute
-  '/strava': typeof StravaRoute
   '/content_/$slug': typeof ContentSlugRoute
   '/content_/manage': typeof ContentManageRoute
   '/content_/new': typeof ContentNewRoute
@@ -106,7 +97,6 @@ export interface FileRouteTypes {
     | '/admin'
     | '/content'
     | '/gears'
-    | '/strava'
     | '/content/$slug'
     | '/content/manage'
     | '/content/new'
@@ -117,7 +107,6 @@ export interface FileRouteTypes {
     | '/admin'
     | '/content'
     | '/gears'
-    | '/strava'
     | '/content/$slug'
     | '/content/manage'
     | '/content/new'
@@ -128,7 +117,6 @@ export interface FileRouteTypes {
     | '/admin'
     | '/content'
     | '/gears'
-    | '/strava'
     | '/content_/$slug'
     | '/content_/manage'
     | '/content_/new'
@@ -140,7 +128,6 @@ export interface RootRouteChildren {
   AdminRoute: typeof AdminRoute
   ContentRoute: typeof ContentRoute
   GearsRoute: typeof GearsRoute
-  StravaRoute: typeof StravaRoute
   ContentSlugRoute: typeof ContentSlugRoute
   ContentManageRoute: typeof ContentManageRoute
   ContentNewRoute: typeof ContentNewRoute
@@ -149,13 +136,6 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/strava': {
-      id: '/strava'
-      path: '/strava'
-      fullPath: '/strava'
-      preLoaderRoute: typeof StravaRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/gears': {
       id: '/gears'
       path: '/gears'
@@ -220,7 +200,6 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRoute: AdminRoute,
   ContentRoute: ContentRoute,
   GearsRoute: GearsRoute,
-  StravaRoute: StravaRoute,
   ContentSlugRoute: ContentSlugRoute,
   ContentManageRoute: ContentManageRoute,
   ContentNewRoute: ContentNewRoute,
